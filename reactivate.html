@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — Reactivate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'IBM Plex Sans', sans-serif; background: #fafaf9; color: #0f1411; }
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; background-image: radial-gradient(circle at 20% 50%, #ecfdf5 0%, transparent 50%), radial-gradient(circle at 80% 20%, #f0fdf4 0%, transparent 40%); }
+
+    .card { width: 100%; max-width: 440px; background: #fff; border: 1px solid #eceae5; border-radius: 12px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+
+    .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .logo-mark { width: 30px; height: 30px; border-radius: 7px; background: #0f1411; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 700; }
+    .logo-name { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; }
+
+    h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 4px; }
+    .subtitle { font-size: 12px; color: #737773; margin-bottom: 24px; line-height: 1.5; }
+
+    .info-box { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; border-radius: 7px; padding: 10px 12px; font-size: 12px; margin-bottom: 20px; line-height: 1.5; }
+    .warn-box { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; border-radius: 7px; padding: 10px 12px; font-size: 12px; margin-bottom: 20px; line-height: 1.5; }
+
+    .plan-summary { background: #f0fdf4; border: 2px solid #047857; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+    .plan-summary .name { font-size: 14px; font-weight: 600; }
+    .plan-summary .price { font-size: 18px; font-weight: 700; color: #047857; }
+    .plan-summary .price span { font-size: 11px; font-weight: 400; color: #737773; }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 10.5px; color: #737773; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 500; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 9px 12px; border-radius: 7px; border: 1px solid #e3e0da; background: #fff; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; outline: none; transition: border-color 0.15s; }
+    .field input:focus { border-color: #047857; }
+
+    #card-element { padding: 10px 12px; border-radius: 7px; border: 1px solid #e3e0da; background: #fff; }
+    #card-element.StripeElement--focus { border-color: #047857; }
+    .card-error { color: #b91c1c; font-size: 12px; margin-top: 6px; }
+
+    .btn-primary { width: 100%; padding: 11px; border-radius: 8px; border: none; background: #047857; color: #fff; font-size: 14px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; cursor: pointer; transition: opacity 0.15s; margin-top: 8px; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error-box { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px; }
+    .success-box { background: #ecfdf5; border: 1px solid #6ee7b7; color: #047857; border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px; }
+
+    .security-note { font-size: 11px; color: #737773; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+    .back-link { display: block; text-align: center; margin-top: 16px; font-size: 12px; color: #737773; text-decoration: none; }
+    .back-link:hover { color: #047857; }
+
+    .success-screen { text-align: center; padding: 10px 0; }
+    .success-screen .big { font-size: 48px; margin-bottom: 14px; }
+    .success-screen h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .success-screen p { font-size: 13px; color: #737773; margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row">
+      <div class="logo-mark">Q</div>
+      <div class="logo-name">Quran Journey</div>
+    </div>
+
+    <div id="loading" style="text-align:center;color:#737773;font-size:13px;padding:20px 0">Verifying account…</div>
+
+    <div id="main" style="display:none">
+      <h1>Reactivate your account</h1>
+      <p class="subtitle">Welcome back. Enter your payment details to restore full access. Your data has been preserved.</p>
+
+      <div class="info-box" id="org-info"></div>
+
+      <div class="plan-summary">
+        <div class="name">Pro Plan</div>
+        <div class="price">$19 <span>/ month</span></div>
+      </div>
+
+      <div id="error" class="error-box" style="display:none"></div>
+
+      <div class="field">
+        <label>Card Details</label>
+        <div id="card-element"></div>
+        <div id="card-errors" class="card-error"></div>
+      </div>
+
+      <div class="field">
+        <label>Cardholder Name</label>
+        <input type="text" id="card-name" placeholder="Name on card" />
+      </div>
+
+      <p class="security-note">🔒 Payments secured by Stripe. We never store your card details.</p>
+
+      <button class="btn-primary" id="reactivate-btn" onclick="reactivate()">Reactivate — $19/month</button>
+    </div>
+
+    <div id="not-found" style="display:none;text-align:center;padding:20px 0;color:#737773;font-size:13px">
+      <p>No cancelled account found for this session.</p>
+      <a href="index.html" style="color:#047857;font-size:12px">← Back to sign in</a>
+    </div>
+
+    <div id="success" style="display:none">
+      <div class="success-screen">
+        <div class="big">✅</div>
+        <h2>Account reactivated!</h2>
+        <p>Your subscription is active again. All your data is right where you left it.</p>
+        <button class="btn-primary" style="max-width:220px;margin:0 auto" onclick="window.location.href='index.html'">Sign In</button>
+      </div>
+    </div>
+
+    <a href="index.html" class="back-link" id="back-link">← Back to sign in</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://fdibhjmbabdcphldnvmq.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const STRIPE_PUBLISHABLE_KEY = 'pk_test_51TPrdKHbl5wyuqbIWeCbYt19R9dRqiNmtr8onrKxAnko3CzrYuQeQ1XAspaVi5NmpCgiVMlIu43sXRPyaaeRidrh00GnNRYGVg';
+
+    let stripe, cardElement, currentOrg = null;
+
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+
+      // Returning from Stripe checkout success
+      if (params.get('success') === '1') {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('back-link').style.display = 'none';
+        return;
+      }
+
+      // Check URL param first (email passed from login page)
+      const emailParam = params.get('email');
+
+      let orgEmail = emailParam;
+
+      // Also check if there's an active session
+      const { data: { session } } = await db.auth.getSession();
+      if (session && !orgEmail) orgEmail = session.user.email;
+
+      if (!orgEmail) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('not-found').style.display = 'block';
+        return;
+      }
+
+      // Look up org
+      const { data: userData } = await db.from('users').select('org_id, name').eq('email', orgEmail).single();
+      if (!userData?.org_id) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('not-found').style.display = 'block';
+        return;
+      }
+
+      const { data: org } = await db.from('organizations').select('*').eq('id', userData.org_id).single();
+      if (!org || org.is_active) {
+        // Already active — send to login
+        window.location.href = 'index.html';
+        return;
+      }
+
+      currentOrg = org;
+      document.getElementById('org-info').textContent = `Reactivating: ${org.name} (${orgEmail})`;
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+
+      // Init Stripe
+      if (!STRIPE_PUBLISHABLE_KEY.includes('REPLACE')) {
+        stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+        const elements = stripe.elements();
+        cardElement = elements.create('card', {
+          style: { base: { fontFamily: "'IBM Plex Sans', sans-serif", fontSize: '13px', color: '#0f1411' }, invalid: { color: '#b91c1c' } }
+        });
+        cardElement.mount('#card-element');
+        cardElement.on('change', e => {
+          document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
+        });
+      } else {
+        document.getElementById('card-element').innerHTML = '<p style="font-size:12px;color:#b45309;padding:4px 0">⚠️ Stripe not yet configured. Add your Stripe key to go live.</p>';
+      }
+    }
+
+    async function reactivate() {
+      const btn = document.getElementById('reactivate-btn');
+      const errEl = document.getElementById('error');
+      const cardName = document.getElementById('card-name').value.trim();
+
+      if (!cardName) { errEl.textContent = 'Please enter the cardholder name.'; errEl.style.display = 'block'; return; }
+
+      btn.disabled = true; btn.textContent = 'Processing…';
+      errEl.style.display = 'none';
+
+      if (stripe && cardElement) {
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+          type: 'card', card: cardElement, billing_details: { name: cardName }
+        });
+        if (error) {
+          errEl.textContent = error.message; errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Reactivate — $19.99/month'; return;
+        }
+
+        // Call Edge Function to create new Checkout Session for reactivation
+        const baseUrl = window.location.origin + window.location.pathname.replace('reactivate.html', '');
+        const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
+          body: JSON.stringify({
+            org_name: currentOrg.name,
+            email: currentOrg.email,
+            success_url: baseUrl + 'reactivate.html?success=1&email=' + encodeURIComponent(currentOrg.email),
+            cancel_url: baseUrl + 'reactivate.html?email=' + encodeURIComponent(currentOrg.email),
+          })
+        });
+        const result = await resp.json();
+        if (result.error) {
+          errEl.textContent = result.error; errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Reactivate — $19.99/month'; return;
+        }
+        window.location.href = result.url;
+        return;
+      }
+
+      // Reactivate org
+      const { error: dbError } = await db.from('organizations')
+        .update({ is_active: true, plan: 'pro' })
+        .eq('id', currentOrg.id);
+
+      // Reactivate all users in this org
+      await db.from('users').update({ is_active: true }).eq('org_id', currentOrg.id);
+
+      if (dbError) {
+        errEl.textContent = dbError.message; errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Reactivate — $19/month'; return;
+      }
+
+      document.getElementById('main').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+      document.getElementById('back-link').style.display = 'none';
+    }
+
+    init();
+  </script>
+</body>
+</html>
