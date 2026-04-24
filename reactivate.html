@@ -202,7 +202,7 @@
         }
 
         // Call Edge Function to create new Checkout Session for reactivation
-        const baseUrl = 'https://propel-paradise.github.io/Quran-Joureny/';
+        const baseUrl = 'https://propel-paradise.github.io/Quran-Journey/';
         const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
