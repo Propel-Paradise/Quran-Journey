@@ -275,12 +275,22 @@
       sessionStorage.setItem('pendingPM', paymentMethod.id);
 
       // Call Supabase Edge Function to create Stripe Checkout Session
-      const baseUrl = 'https://propel-paradise.github.io/Quran-Joureny/';
+      const baseUrl = 'https://propel-paradise.github.io/Quran-Journey/';
+
+      console.log('orgData:', orgData);
+      console.log('Calling Edge Function with:', { org_name: orgData.name, email: orgData.email });
+
+      if (!orgData.email) {
+        errEl.textContent = 'Session lost. Please go back to step 1 and re-enter your school info.';
+        errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Start Free Trial →'; return;
+      }
+
       const resp = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_KEY}` },
         body: JSON.stringify({
-          org_name: orgData.name,
+          org_name: orgData.name || '',
           email: orgData.email,
           success_url: baseUrl + 'register.html?step=account',
           cancel_url: baseUrl + 'register.html',
