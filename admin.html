@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'IBM Plex Sans', sans-serif; background: #fafaf9; color: #0f1411; }
+
+    /* Login screen */
+    .login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+    .login-card { width: 100%; max-width: 360px; background: #fff; border: 1px solid #eceae5; border-radius: 12px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+    .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .logo-mark { width: 28px; height: 28px; border-radius: 6px; background: #7c3aed; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 700; }
+    .logo-name { font-size: 16px; font-weight: 600; }
+    .admin-badge { margin-left: auto; font-size: 10px; background: #7c3aed; color: #fff; padding: 2px 8px; border-radius: 10px; font-weight: 600; letter-spacing: 0.3px; }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 10.5px; color: #737773; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 500; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 9px 12px; border-radius: 7px; border: 1px solid #e3e0da; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; outline: none; }
+    .field input:focus { border-color: #7c3aed; }
+
+    .btn-admin { width: 100%; padding: 10px; border-radius: 7px; border: none; background: #7c3aed; color: #fff; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; cursor: pointer; }
+    .btn-admin:hover { opacity: 0.85; }
+    .btn-admin:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error-box { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px; }
+
+    /* Dashboard */
+    #dashboard { display: none; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-bottom: 1px solid #eceae5; background: #fff; position: sticky; top: 0; z-index: 10; }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .signout-btn { font-size: 11px; color: #737773; background: none; border: none; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid #eceae5; background: #fff; }
+    .stat-cell { padding: 14px 18px; border-right: 1px solid #eceae5; }
+    .stat-cell:last-child { border-right: none; }
+    .stat-label { font-size: 10.5px; color: #737773; letter-spacing: 0.3px; text-transform: uppercase; font-weight: 500; }
+    .stat-value { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-top: 3px; }
+    .stat-sub { font-size: 11px; color: #737773; margin-top: 1px; }
+
+    .main { padding: 20px; }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 13px; font-weight: 600; }
+
+    .search-bar { width: 100%; max-width: 300px; padding: 8px 12px; border-radius: 7px; border: 1px solid #e3e0da; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; outline: none; margin-bottom: 14px; }
+    .search-bar:focus { border-color: #7c3aed; }
+
+    .table-wrap { background: #fff; border-radius: 8px; border: 1px solid #eceae5; overflow: hidden; margin-bottom: 24px; }
+    .table-head { display: grid; padding: 9px 16px; background: #fafaf7; border-bottom: 1px solid #eceae5; font-size: 10.5px; color: #737773; letter-spacing: 0.3px; text-transform: uppercase; font-weight: 500; }
+    .table-row { display: grid; padding: 12px 16px; align-items: center; border-bottom: 1px solid #eceae5; font-size: 13px; }
+    .table-row:last-child { border-bottom: none; }
+    .table-row:hover { background: #fafaf9; }
+
+    .pill { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 5px; font-size: 11px; font-weight: 500; }
+    .pill-active { background: #ecfdf5; color: #047857; }
+    .pill-trial { background: #eff6ff; color: #1d4ed8; }
+    .pill-cancelled { background: #fef2f2; color: #b91c1c; }
+    .pill-failed { background: #fffbeb; color: #b45309; }
+
+    .icon-btn { padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; cursor: pointer; border: 1px solid #e3e0da; background: #fff; color: #3a3f3c; }
+    .icon-btn:hover { background: #f4f3ef; }
+    .icon-btn-danger { border-color: #fecaca !important; color: #b91c1c !important; background: #fef2f2 !important; }
+
+    .loading { padding: 60px; text-align: center; color: #737773; font-size: 13px; }
+    .empty-state { padding: 40px; text-align: center; color: #737773; font-size: 13px; }
+
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .modal { background: #fff; border-radius: 10px; padding: 28px; width: 100%; max-width: 440px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+    .modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+    .modal .sub { font-size: 12px; color: #737773; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+    .warn-box { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px; }
+    .success-box { background: #ecfdf5; border: 1px solid #6ee7b7; color: #047857; border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <div class="logo-row">
+        <div class="logo-mark">Q</div>
+        <div class="logo-name">Quran Journey</div>
+        <div class="admin-badge">ADMIN</div>
+      </div>
+      <div id="login-error" class="error-box" style="display:none"></div>
+      <div class="field"><label>Email</label><input type="email" id="admin-email" placeholder="admin@quranjourney.com" /></div>
+      <div class="field"><label>Password</label><input type="password" id="admin-password" placeholder="••••••••" /></div>
+      <button class="btn-admin" id="login-btn" onclick="adminLogin()">Sign In</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="logo-mark" style="width:24px;height:24px;border-radius:5px;font-size:12px">Q</div>
+        <span style="font-size:13px;font-weight:600">Quran Journey</span>
+        <div class="admin-badge">ADMIN</div>
+      </div>
+      <button class="signout-btn" onclick="adminSignOut()">Sign out</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-label">Total Orgs</div><div class="stat-value" id="stat-total">—</div><div class="stat-sub">registered</div></div>
+      <div class="stat-cell"><div class="stat-label">Active</div><div class="stat-value" id="stat-active">—</div><div class="stat-sub">paying or trial</div></div>
+      <div class="stat-cell"><div class="stat-label">Monthly Revenue</div><div class="stat-value" id="stat-revenue">—</div><div class="stat-sub">active pro plans</div></div>
+      <div class="stat-cell"><div class="stat-label">Cancelled</div><div class="stat-value" id="stat-cancelled">—</div><div class="stat-sub">inactive</div></div>
+    </div>
+
+    <div class="main">
+      <div class="section-header">
+        <div class="section-title">Organizations</div>
+        <div style="font-size:12px;color:#737773" id="last-refreshed"></div>
+      </div>
+      <input type="text" class="search-bar" id="org-search" placeholder="Search organizations…" oninput="renderOrgs()" />
+      <div class="table-wrap">
+        <div class="table-head" style="grid-template-columns:2fr 2fr 1fr 1fr 1fr 120px">
+          <div>Organization</div><div>Email</div><div>Plan</div><div>Status</div><div>Created</div><div style="text-align:right">Actions</div>
+        </div>
+        <div id="orgs-list"><div class="loading">Loading…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEACTIVATE MODAL -->
+  <div class="modal-overlay" id="deactivate-modal" style="display:none">
+    <div class="modal">
+      <h2>Deactivate Organization</h2>
+      <p class="sub" id="deactivate-sub"></p>
+      <div class="warn-box">This will deactivate the org and all its users. Their data is preserved.</div>
+      <div id="deactivate-error" class="error-box" style="display:none"></div>
+      <div id="deactivate-success" class="success-box" style="display:none"></div>
+      <div class="modal-actions">
+        <button class="icon-btn" onclick="closeModals()">Cancel</button>
+        <button class="icon-btn icon-btn-danger" id="deactivate-btn" onclick="confirmDeactivate()">Deactivate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- REACTIVATE MODAL -->
+  <div class="modal-overlay" id="reactivate-modal" style="display:none">
+    <div class="modal">
+      <h2>Reactivate Organization</h2>
+      <p class="sub" id="reactivate-sub"></p>
+      <div id="reactivate-error" class="error-box" style="display:none"></div>
+      <div id="reactivate-success" class="success-box" style="display:none"></div>
+      <div class="modal-actions">
+        <button class="icon-btn" onclick="closeModals()">Cancel</button>
+        <button class="btn-admin" style="width:auto;padding:7px 14px" id="reactivate-btn" onclick="confirmReactivate()">Reactivate</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://fdibhjmbabdcphldnvmq.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // ── ADMIN CREDENTIALS (change these) ──────────────────────────
+    const ADMIN_EMAIL = 'admin@quranjourney.app';
+    const ADMIN_PASSWORD_HASH = 'qj_admin_2026_secure'; // Change this to something strong
+    // ─────────────────────────────────────────────────────────────
+
+    let orgs = [];
+    let selectedOrgId = null;
+    let isAuthenticated = false;
+
+    function adminLogin() {
+      const email = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value;
+      const errEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD_HASH) {
+        sessionStorage.setItem('qj_admin', 'true');
+        isAuthenticated = true;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadOrgs();
+      } else {
+        errEl.textContent = 'Invalid credentials.';
+        errEl.style.display = 'block';
+        btn.textContent = 'Sign In';
+      }
+    }
+
+    function adminSignOut() {
+      sessionStorage.removeItem('qj_admin');
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('login-screen').style.display = 'flex';
+    }
+
+    async function loadOrgs() {
+      const { data } = await db.from('organizations').select('*').order('created_at', { ascending: false });
+      orgs = data || [];
+
+      const total = orgs.length;
+      const active = orgs.filter(o => o.is_active).length;
+      const cancelled = orgs.filter(o => !o.is_active).length;
+      const revenue = orgs.filter(o => o.is_active && o.plan === 'pro').length * 19.99;
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-active').textContent = active;
+      document.getElementById('stat-cancelled').textContent = cancelled;
+      document.getElementById('stat-revenue').textContent = `$${revenue.toFixed(0)}`;
+      document.getElementById('last-refreshed').textContent = `Last updated ${new Date().toLocaleTimeString()}`;
+
+      renderOrgs();
+    }
+
+    function renderOrgs() {
+      const el = document.getElementById('orgs-list');
+      const search = document.getElementById('org-search').value.toLowerCase();
+      const filtered = orgs.filter(o =>
+        o.name.toLowerCase().includes(search) || o.email.toLowerCase().includes(search)
+      );
+
+      if (filtered.length === 0) {
+        el.innerHTML = `<div class="empty-state">No organizations found.</div>`;
+        return;
+      }
+
+      el.innerHTML = filtered.map(o => {
+        const created = new Date(o.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const planPill = o.plan === 'trial' ? '<span class="pill pill-trial">Trial</span>'
+          : o.plan === 'pro' ? '<span class="pill pill-active">Pro</span>'
+          : o.plan === 'payment_failed' ? '<span class="pill pill-failed">Failed</span>'
+          : '<span class="pill pill-cancelled">Cancelled</span>';
+        const statusPill = o.is_active
+          ? '<span class="pill pill-active">Active</span>'
+          : '<span class="pill pill-cancelled">Inactive</span>';
+        const actionBtn = o.is_active
+          ? `<button class="icon-btn icon-btn-danger" onclick="openDeactivate(${o.id},'${o.name.replace(/'/g,"\\'")}')">Deactivate</button>`
+          : `<button class="icon-btn" style="color:#047857;border-color:#6ee7b7" onclick="openReactivate(${o.id},'${o.name.replace(/'/g,"\\'")}')">Reactivate</button>`;
+
+        return `
+          <div class="table-row" style="grid-template-columns:2fr 2fr 1fr 1fr 1fr 120px">
+            <div style="font-weight:500">${o.name}</div>
+            <div style="font-size:12px;color:#737773;font-family:'IBM Plex Mono',monospace">${o.email}</div>
+            <div>${planPill}</div>
+            <div>${statusPill}</div>
+            <div style="font-size:11px;color:#737773">${created}</div>
+            <div style="text-align:right">${actionBtn}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function openDeactivate(orgId, orgName) {
+      selectedOrgId = orgId;
+      document.getElementById('deactivate-sub').textContent = `Deactivate "${orgName}"?`;
+      document.getElementById('deactivate-error').style.display = 'none';
+      document.getElementById('deactivate-success').style.display = 'none';
+      document.getElementById('deactivate-modal').style.display = 'flex';
+    }
+
+    function openReactivate(orgId, orgName) {
+      selectedOrgId = orgId;
+      document.getElementById('reactivate-sub').textContent = `Reactivate "${orgName}" and restore access?`;
+      document.getElementById('reactivate-error').style.display = 'none';
+      document.getElementById('reactivate-success').style.display = 'none';
+      document.getElementById('reactivate-modal').style.display = 'flex';
+    }
+
+    async function confirmDeactivate() {
+      const btn = document.getElementById('deactivate-btn');
+      const errEl = document.getElementById('deactivate-error');
+      const sucEl = document.getElementById('deactivate-success');
+      btn.disabled = true; btn.textContent = 'Processing…';
+
+      await db.from('organizations').update({ is_active: false, plan: 'cancelled' }).eq('id', selectedOrgId);
+      await db.from('users').update({ is_active: false }).eq('org_id', selectedOrgId);
+
+      sucEl.textContent = 'Organization deactivated.';
+      sucEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Deactivate';
+      await loadOrgs();
+      setTimeout(closeModals, 1500);
+    }
+
+    async function confirmReactivate() {
+      const btn = document.getElementById('reactivate-btn');
+      const sucEl = document.getElementById('reactivate-success');
+      btn.disabled = true; btn.textContent = 'Processing…';
+
+      await db.from('organizations').update({ is_active: true, plan: 'pro' }).eq('id', selectedOrgId);
+      await db.from('users').update({ is_active: true }).eq('org_id', selectedOrgId);
+
+      sucEl.textContent = 'Organization reactivated.';
+      sucEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Reactivate';
+      await loadOrgs();
+      setTimeout(closeModals, 1500);
+    }
+
+    function closeModals() {
+      document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
+      selectedOrgId = null;
+    }
+
+    document.querySelectorAll('.modal-overlay')?.forEach(el => {
+      el.addEventListener('click', e => { if (e.target === el) closeModals(); });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !isAuthenticated) adminLogin();
+    });
+
+    // Check if already logged in
+    if (sessionStorage.getItem('qj_admin') === 'true') {
+      isAuthenticated = true;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadOrgs();
+    }
+  </script>
+</body>
+</html>
