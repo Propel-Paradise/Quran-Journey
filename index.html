@@ -101,7 +101,7 @@
     <div class="logo-row">
       <div class="logo-mark">Q</div>
       <div class="logo-name">Quran Journey</div>
-      <div class="logo-version">v1.3</div>
+      <div class="logo-version">v1.1</div>
     </div>
 
     <!-- LOGIN PANEL -->
@@ -130,7 +130,8 @@
 
       <div class="footer-links">
         <a href="#" onclick="showForgot(); return false;">Forgot password?</a>
-        <a href="register.html">New organization?</a>
+        <a href="register.html" id="footer-org-link">New organization?</a>
+        <a href="join.html" id="footer-join-link" style="display:none">Join school</a>
       </div>
       <div id="cancel-redirect" style="display:none;margin-top:12px;text-align:center">
         <a href="register.html" style="font-size:12px;color:#047857;text-decoration:none;font-weight:500">→ Reactivate your organization</a>
@@ -189,6 +190,8 @@
       selectedRole = role;
       document.getElementById('btn-school').classList.toggle('active', role === 'school');
       document.getElementById('btn-parent').classList.toggle('active', role === 'parent');
+      document.getElementById('footer-org-link').style.display = role === 'school' ? 'block' : 'none';
+      document.getElementById('footer-join-link').style.display = role === 'parent' ? 'block' : 'none';
     }
 
     function showError(msg) {
