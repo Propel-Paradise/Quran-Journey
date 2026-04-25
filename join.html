@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — Join as Parent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'IBM Plex Sans', sans-serif; background: #fafaf9; color: #0f1411; }
+    body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 24px;
+      background-image: radial-gradient(circle at 20% 50%, #ecfdf5 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, #f0fdf4 0%, transparent 40%);
+    }
+
+    .card {
+      width: 100%; max-width: 400px; background: #fff;
+      border: 1px solid #eceae5; border-radius: 12px; padding: 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    }
+
+    .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .logo-mark { width: 30px; height: 30px; border-radius: 7px; background: #0f1411; color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 700; }
+    .logo-name { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; }
+
+    h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 4px; }
+    .subtitle { font-size: 12px; color: #737773; margin-bottom: 24px; line-height: 1.5; }
+
+    .school-banner { background: #f0fdf4; border: 1px solid #6ee7b7; border-radius: 8px; padding: 12px 14px; margin-bottom: 20px; display: none; }
+    .school-banner .label { font-size: 10.5px; color: #047857; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; margin-bottom: 3px; }
+    .school-banner .name { font-size: 14px; font-weight: 600; color: #0f1411; }
+
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 10.5px; color: #737773; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 500; margin-bottom: 6px; }
+    .field input { width: 100%; padding: 9px 12px; border-radius: 7px; border: 1px solid #e3e0da; background: #fff; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; outline: none; transition: border-color 0.15s; }
+    .field input:focus { border-color: #047857; }
+    .field input.valid { border-color: #047857; background: #f0fdf4; }
+    .field input.invalid { border-color: #b91c1c; }
+    .field .hint { font-size: 11px; color: #737773; margin-top: 4px; }
+
+    .btn-primary { width: 100%; padding: 10px; border-radius: 7px; border: none; background: #0f1411; color: #fff; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; cursor: pointer; transition: opacity 0.15s; margin-top: 4px; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error-box { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px; }
+    .success-screen { text-align: center; padding: 10px 0; }
+    .success-screen .big { font-size: 48px; margin-bottom: 14px; }
+    .success-screen h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .success-screen p { font-size: 13px; color: #737773; margin-bottom: 24px; }
+
+    .back-link { display: block; text-align: center; margin-top: 16px; font-size: 12px; color: #737773; text-decoration: none; }
+    .back-link:hover { color: #047857; }
+
+    .code-input { font-family: 'IBM Plex Mono', monospace !important; font-size: 18px !important; letter-spacing: 3px; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row">
+      <div class="logo-mark">Q</div>
+      <div class="logo-name">Quran Journey</div>
+    </div>
+
+    <div id="register-form">
+      <h1>Join as a parent</h1>
+      <p class="subtitle">Enter the invite code from your child's school to create your parent account.</p>
+
+      <div id="error" class="error-box" style="display:none"></div>
+
+      <div class="school-banner" id="school-banner">
+        <div class="label">Joining</div>
+        <div class="name" id="school-name-display"></div>
+      </div>
+
+      <div class="field">
+        <label>School Invite Code</label>
+        <input type="text" id="invite-code" class="code-input" placeholder="XXXX-XXXX" maxlength="9" autocomplete="off" oninput="validateCode()" />
+        <div class="hint" id="code-hint">Enter the code your school gave you.</div>
+      </div>
+
+      <div class="field">
+        <label>Your Name</label>
+        <input type="text" id="parent-name" placeholder="e.g. Ahmed Al-Rashid" autocomplete="name" />
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="parent-email" placeholder="you@gmail.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="parent-password" placeholder="Minimum 8 characters" />
+      </div>
+
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" id="parent-password2" placeholder="Re-enter password" />
+      </div>
+
+      <button class="btn-primary" id="register-btn" onclick="register()">Create Account</button>
+      <a href="index.html" class="back-link">Already have an account? Sign in</a>
+    </div>
+
+    <div id="success-screen" style="display:none">
+      <div class="success-screen">
+        <div class="big">🎉</div>
+        <h2>You're all set!</h2>
+        <p>Your parent account has been created. Sign in to view your child's progress.</p>
+        <button class="btn-primary" style="max-width:200px;margin:0 auto" onclick="window.location.href='index.html'">Sign In</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://fdibhjmbabdcphldnvmq.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let validatedOrgId = null;
+    let codeTimer = null;
+
+    // Auto-format code input with dash
+    document.getElementById('invite-code').addEventListener('input', function() {
+      let val = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8);
+      if (val.length > 4) val = val.slice(0, 4) + '-' + val.slice(4);
+      this.value = val;
+    });
+
+    async function validateCode() {
+      const code = document.getElementById('invite-code').value.trim().toUpperCase();
+      const input = document.getElementById('invite-code');
+      const hint = document.getElementById('code-hint');
+      const banner = document.getElementById('school-banner');
+
+      if (code.length < 9) {
+        input.className = 'code-input';
+        banner.style.display = 'none';
+        validatedOrgId = null;
+        hint.textContent = 'Enter the code your school gave you.';
+        return;
+      }
+
+      clearTimeout(codeTimer);
+      codeTimer = setTimeout(async () => {
+        const { data: org } = await db.from('organizations')
+          .select('id, name, is_active').eq('invite_code', code).single();
+
+        if (!org) {
+          input.className = 'code-input invalid';
+          hint.textContent = 'Code not found. Check with your school.';
+          hint.style.color = '#b91c1c';
+          banner.style.display = 'none';
+          validatedOrgId = null;
+        } else if (!org.is_active) {
+          input.className = 'code-input invalid';
+          hint.textContent = 'This school\'s account is currently inactive.';
+          hint.style.color = '#b91c1c';
+          banner.style.display = 'none';
+          validatedOrgId = null;
+        } else {
+          input.className = 'code-input valid';
+          hint.textContent = '✓ Code verified!';
+          hint.style.color = '#047857';
+          document.getElementById('school-name-display').textContent = org.name;
+          banner.style.display = 'block';
+          validatedOrgId = org.id;
+        }
+      }, 500);
+    }
+
+    async function register() {
+      const code = document.getElementById('invite-code').value.trim().toUpperCase();
+      const name = document.getElementById('parent-name').value.trim();
+      const email = document.getElementById('parent-email').value.trim();
+      const password = document.getElementById('parent-password').value;
+      const password2 = document.getElementById('parent-password2').value;
+      const btn = document.getElementById('register-btn');
+      const errEl = document.getElementById('error');
+
+      errEl.style.display = 'none';
+
+      if (!code || code.length < 9) { errEl.textContent = 'Please enter your school\'s invite code.'; errEl.style.display = 'block'; return; }
+      if (!name) { errEl.textContent = 'Please enter your name.'; errEl.style.display = 'block'; return; }
+      if (!email || !email.includes('@')) { errEl.textContent = 'Please enter a valid email.'; errEl.style.display = 'block'; return; }
+      if (password.length < 8) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.style.display = 'block'; return; }
+      if (password !== password2) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
+
+      btn.disabled = true; btn.textContent = 'Creating account…';
+
+      // Validate code if not already done
+      if (!validatedOrgId) {
+        const { data: org } = await db.from('organizations')
+          .select('id, name, is_active').eq('invite_code', code).single();
+
+        if (!org || !org.is_active) {
+          errEl.textContent = 'Invalid or inactive invite code.';
+          errEl.style.display = 'block';
+          btn.disabled = false; btn.textContent = 'Create Account'; return;
+        }
+        validatedOrgId = org.id;
+      }
+
+      // Create Supabase Auth user
+      const { error: authError } = await db.auth.signUp({ email, password });
+      if (authError && !authError.message.toLowerCase().includes('already registered')) {
+        errEl.textContent = authError.message;
+        errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Create Account'; return;
+      }
+
+      // Create user record
+      const { error: dbError } = await db.from('users').upsert({
+        email, name, role: 'parent',
+        org_id: validatedOrgId,
+        is_active: true,
+        must_change_password: false,
+      }, { onConflict: 'email' });
+
+      if (dbError) {
+        errEl.textContent = dbError.message;
+        errEl.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Create Account'; return;
+      }
+
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+    }
+
+    // Pre-fill code from URL param if present
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if (code) {
+        const input = document.getElementById('invite-code');
+        let formatted = code.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 8);
+        if (formatted.length > 4) formatted = formatted.slice(0, 4) + '-' + formatted.slice(4);
+        input.value = formatted;
+        validateCode();
+      }
+    });
+  </script>
+</body>
+</html>
