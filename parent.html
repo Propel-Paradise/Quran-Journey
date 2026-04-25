@@ -39,13 +39,14 @@
 
     .student-selector {
       background: #fff; border-bottom: 1px solid #eceae5;
-      padding: 12px 20px; display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+      flex-wrap: wrap;
     }
-    .selector-label { font-size: 11px; color: #737773; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; }
+    .selector-label { font-size: 11px; color: #737773; font-weight: 500; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
     .student-select {
-      padding: 7px 12px; border-radius: 7px; border: 1px solid #e3e0da;
+      padding: 8px 14px; border-radius: 7px; border: 1px solid #e3e0da;
       font-size: 13px; font-family: 'IBM Plex Sans', sans-serif;
-      background: #fff; outline: none; cursor: pointer;
+      background: #fff; outline: none; cursor: pointer; min-width: 200px;
     }
     .student-select:focus { border-color: #047857; }
 
@@ -163,19 +164,14 @@
       <div class="stat-sub">logged</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-label">Juz Known</div>
-      <div class="stat-value" id="stat-juz">—</div>
-      <div class="stat-sub">memorized</div>
-    </div>
-    <div class="stat-cell">
       <div class="stat-label">Last Session</div>
       <div class="stat-value" id="stat-last" style="font-size:16px;margin-top:5px">—</div>
       <div class="stat-sub" id="stat-last-sub">—</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-label">Avg Behavior</div>
+      <div class="stat-label">Behavior This Week</div>
       <div class="stat-value" id="stat-behavior" style="font-size:16px;margin-top:5px">—</div>
-      <div class="stat-sub">last 5 sessions</div>
+      <div class="stat-sub">last 7 days</div>
     </div>
   </div>
 
@@ -310,15 +306,24 @@
         document.getElementById('last-updated').textContent = '';
       }
 
-      // Avg behavior last 5
-      const recentBehavior = allLogs.slice(0, 5).map(l => l.behavior).filter(Boolean);
-      if (recentBehavior.length > 0) {
-        const scoreMap = { Excellent: 3, Good: 2, 'Needs Work': 1 };
-        const avg = recentBehavior.reduce((s, b) => s + (scoreMap[b] || 0), 0) / recentBehavior.length;
-        document.getElementById('stat-behavior').textContent = avg >= 2.5 ? 'Excellent' : avg >= 1.5 ? 'Good' : 'Needs Work';
+      // Behavior this week
+      const weekAgo = new Date(); weekAgo.setDate(weekAgo.getDate() - 7);
+      const weekBehavior = allLogs
+        .filter(l => new Date(l.date) >= weekAgo && l.behavior)
+        .map(l => l.behavior);
+      if (weekBehavior.length > 0) {
+        const scoreMap = { Excellent: 3, Good: 2, 'Needs Work': 1, Failed: 0 };
+        const avg = weekBehavior.reduce((s, b) => s + (scoreMap[b] || 0), 0) / weekBehavior.length;
+        document.getElementById('stat-behavior').textContent = avg >= 2.5 ? 'Excellent' : avg >= 1.5 ? 'Good' : avg >= 0.5 ? 'Needs Work' : 'Failed';
       } else {
         document.getElementById('stat-behavior').textContent = '—';
       }
+
+      // Color the behavior stat
+      const behaviorEl = document.getElementById('stat-behavior');
+      const behaviorVal = behaviorEl.textContent;
+      const colorMap = { 'Excellent': '#047857', 'Good': '#b45309', 'Needs Work': '#b91c1c', 'Failed': '#b91c1c' };
+      behaviorEl.style.color = colorMap[behaviorVal] || '#0f1411';
 
       renderLogs(allLogs);
     }
