@@ -149,36 +149,45 @@
     const SUPABASE_KEY = 'sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ── ADMIN CREDENTIALS (change these) ──────────────────────────
-    const ADMIN_EMAIL = 'admin@quranjourney.app';
-    const ADMIN_PASSWORD_HASH = 'qj_admin_2026_secure'; // Change this to something strong
-    // ─────────────────────────────────────────────────────────────
+    const ADMIN_EMAIL = 'muhammadkhamd786@gmail.com';
 
     let orgs = [];
     let selectedOrgId = null;
     let isAuthenticated = false;
 
-    function adminLogin() {
+    async function adminLogin() {
       const email = document.getElementById('admin-email').value.trim();
       const password = document.getElementById('admin-password').value;
       const errEl = document.getElementById('login-error');
       const btn = document.getElementById('login-btn');
 
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD_HASH) {
-        sessionStorage.setItem('qj_admin', 'true');
-        isAuthenticated = true;
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        loadOrgs();
-      } else {
+      if (email !== ADMIN_EMAIL) {
+        errEl.textContent = 'Unauthorized.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true; btn.textContent = 'Signing in…';
+      errEl.style.display = 'none';
+
+      const { data, error } = await db.auth.signInWithPassword({ email, password });
+
+      if (error) {
         errEl.textContent = 'Invalid credentials.';
         errEl.style.display = 'block';
-        btn.textContent = 'Sign In';
+        btn.disabled = false; btn.textContent = 'Sign In';
+        return;
       }
+
+      isAuthenticated = true;
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+      loadOrgs();
     }
 
     function adminSignOut() {
-      sessionStorage.removeItem('qj_admin');
+      db.auth.signOut();
+      isAuthenticated = false;
       document.getElementById('dashboard').style.display = 'none';
       document.getElementById('login-screen').style.display = 'flex';
     }
@@ -309,13 +318,15 @@
       if (e.key === 'Enter' && !isAuthenticated) adminLogin();
     });
 
-    // Check if already logged in
-    if (sessionStorage.getItem('qj_admin') === 'true') {
-      isAuthenticated = true;
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      loadOrgs();
-    }
+    // Check if already logged in via Supabase session
+    db.auth.getSession().then(({ data: { session } }) => {
+      if (session && session.user.email === ADMIN_EMAIL) {
+        isAuthenticated = true;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadOrgs();
+      }
+    });
   </script>
 </body>
 </html>
