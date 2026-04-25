@@ -163,8 +163,8 @@
           style="width:100%;max-width:300px;padding:8px 12px;border-radius:7px;border:1px solid #e3e0da;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none" />
       </div>
       <div class="table-wrap">
-        <div class="table-head" style="grid-template-columns:2fr 1fr 1fr 1fr 140px">
-          <div>Student</div><div>Juz Known</div><div>Linked Parent</div><div>Last Log</div><div style="text-align:right">Actions</div>
+        <div class="table-head" style="grid-template-columns:2fr 1fr 1fr 140px">
+          <div>Student</div><div>Linked Parent</div><div>Last Log</div><div style="text-align:right">Actions</div>
         </div>
         <div id="students-list"><div class="loading">Loading students…</div></div>
       </div>
@@ -230,11 +230,7 @@
         <label>Student Name</label>
         <input type="text" id="new-student-name" placeholder="e.g. Yusuf Ahmed" />
       </div>
-      <div class="field">
-        <label>How many Juz do they currently know?</label>
-        <input type="number" id="new-student-juz" min="0" max="30" placeholder="e.g. 3" />
-        <div class="hint">Enter 0 if they are just starting out. This is the baseline — progress will be tracked on top of this.</div>
-      </div>
+
       <div class="field">
         <label>Mushaf Type</label>
         <select id="new-student-mushaf">
@@ -420,11 +416,7 @@
         <label>Student Name</label>
         <input type="text" id="edit-student-name" placeholder="e.g. Yusuf Ahmed" />
       </div>
-      <div class="field">
-        <label>Juz Known (baseline)</label>
-        <input type="number" id="edit-student-juz" min="0" max="30" placeholder="e.g. 3" />
-        <div class="hint">This is the starting baseline. Progress from logs is calculated on top of this.</div>
-      </div>
+
       <div class="field">
         <label>Mushaf Type</label>
         <select id="edit-student-mushaf">
@@ -470,8 +462,6 @@
     const SUPABASE_URL = 'https://fdibhjmbabdcphldnvmq.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const PAGES_PER_JUZ = 20;
 
     let currentUser = null;
     let students = [];
@@ -608,15 +598,7 @@
       updateStats();
     }
 
-    function calcCurrentJuz(studentId) {
-      const student = students.find(s => s.id === studentId);
-      const base_juz = student?.juz_target ?? 0;
-      // Only count sabaq pages from sessions that were NOT failed
-      const totalSabaqPages = logs
-        .filter(l => l.student_id === studentId && l.sabaq_quality !== 'Failed' && !l.sabaq_failed)
-        .reduce((sum, l) => sum + (l.sabaq_pages || 0), 0);
-      return Math.min(base_juz + Math.floor(totalSabaqPages / PAGES_PER_JUZ), 30);
-    }
+
 
     function renderStudents() {
       const el = document.getElementById('students-list');
@@ -632,16 +614,14 @@
       el.innerHTML = filtered.map(s => {
         const lastLog = logs.find(l => l.student_id === s.id);
         const lastDate = lastLog ? new Date(lastLog.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—';
-        const currentJuz = calcCurrentJuz(s.id);
         const linkedParent = parents.find(p => p.email === s.parent_email);
         const parentLabel = linkedParent ? linkedParent.name : '<span style="color:#737773;font-size:11px">No parent</span>';
         return `
-          <div class="table-row" style="grid-template-columns:2fr 1fr 1fr 1fr 140px">
+          <div class="table-row" style="grid-template-columns:2fr 1fr 1fr 140px">
             <div>
               <div class="student-name">${s.name}</div>
-              <div class="student-sub">started with ${s.juz_target ?? 0} juz</div>
+
             </div>
-            <div><span class="pill pill-default">${currentJuz} Juz</span></div>
             <div style="font-size:12px">${parentLabel}</div>
             <div style="font-size:12px;color:#737773;font-family:'IBM Plex Mono',monospace">${lastDate}</div>
             <div class="action-btns">
@@ -711,8 +691,7 @@
       document.getElementById('student-logs-modal').style.display = 'flex';
       document.getElementById('student-logs-title').textContent = studentName;
       const student = students.find(s => s.id === studentId);
-      const currentJuz = calcCurrentJuz(studentId);
-      document.getElementById('student-logs-sub').textContent = `${currentJuz} Juz known · started with ${student?.juz_target ?? 0}`;
+      document.getElementById('student-logs-sub').textContent = student ? student.name : '';
       document.getElementById('student-logs-content').innerHTML = '<div class="loading">Loading…</div>';
 
       const { data } = await db.from('progress_logs').select('*').eq('student_id', studentId).order('date', { ascending: false });
@@ -777,7 +756,7 @@
     function closeModals() {
       document.querySelectorAll('.modal-overlay').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.error-box').forEach(el => el.style.display = 'none');
-      ['new-student-name','new-student-juz','log-sabaq-lines','log-sabqi-juz','log-sabqi-pages','log-manzil-count','log-manzil-juz','log-notes','new-parent-name','new-parent-email','cancel-confirm','cp-new-password','cp-new-password2','edit-student-name','edit-student-juz'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      ['new-student-name','log-sabaq-lines','log-sabqi-juz','log-sabqi-pages','log-manzil-count','log-manzil-juz','log-notes','new-parent-name','new-parent-email','cancel-confirm','cp-new-password','cp-new-password2','edit-student-name'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
       document.getElementById('new-student-parent').value = '';
       if (document.getElementById('new-student-mushaf')) document.getElementById('new-student-mushaf').value = 'madani';
       Object.keys(qualityState).forEach(k => qualityState[k] = null);
@@ -852,11 +831,10 @@
 
     async function addStudent() {
       const name = document.getElementById('new-student-name').value.trim();
-      const juzVal = document.getElementById('new-student-juz').value;
       const parentEmail = document.getElementById('new-student-parent').value;
       const errEl = document.getElementById('add-student-error');
       if (!name) { errEl.textContent = 'Please enter a student name.'; errEl.style.display = 'block'; return; }
-      const payload = { name, juz_target: juzVal !== '' ? parseInt(juzVal) : 0, parent_email: parentEmail || null, mushaf_type: document.getElementById('new-student-mushaf').value || 'madani' };
+      const payload = { name, parent_email: parentEmail || null, mushaf_type: document.getElementById('new-student-mushaf').value || 'madani' };
       if (currentUser.org_id) payload.org_id = currentUser.org_id;
       const { error } = await db.from('students').insert(payload);
       if (error) { errEl.textContent = error.message; errEl.style.display = 'block'; return; }
@@ -924,7 +902,6 @@
       if (!s) return;
       document.getElementById('edit-student-id').value = s.id;
       document.getElementById('edit-student-name').value = s.name;
-      document.getElementById('edit-student-juz').value = s.juz_target ?? '';
       document.getElementById('edit-student-mushaf').value = s.mushaf_type || 'madani';
 
       // Populate parent dropdown
@@ -939,7 +916,6 @@
     async function saveEditStudent() {
       const id = parseInt(document.getElementById('edit-student-id').value);
       const name = document.getElementById('edit-student-name').value.trim();
-      const juz = document.getElementById('edit-student-juz').value;
       const parentEmail = document.getElementById('edit-student-parent').value;
       const errEl = document.getElementById('edit-student-error');
 
@@ -947,7 +923,6 @@
 
       const { error } = await db.from('students').update({
         name,
-        juz_target: juz !== '' ? parseInt(juz) : 0,
         parent_email: parentEmail || null,
         mushaf_type: document.getElementById('edit-student-mushaf').value || 'madani',
       }).eq('id', id);
