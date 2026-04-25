@@ -2,223 +2,458 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quran Journey — Parent</title>
+  <title>Quran Journey — School Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:#fafaf9;color:#0f1411;overflow:hidden;}
     .page{display:flex;height:100vh;}
 
+    /* ── SIDEBAR ── */
     .sidebar{width:248px;background:#0b0f0d;color:#e7e5e0;display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
     .brand-row{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #1c211e;flex-shrink:0;}
-    .logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;}
+    .logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#10b981,#047857);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;}
     .brand-name{font-size:13px;font-weight:600;color:#fff;}
     .brand-sub{font-size:11px;color:#9aa19d;}
-
-    .child-switcher{margin:12px 12px 4px;padding:10px 12px;border-radius:8px;background:#141a17;border:1px solid #1f2622;flex-shrink:0;}
-    .child-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.4px;font-weight:600;margin-bottom:6px;}
-    .child-row{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;transition:opacity 0.15s;}
-    .child-row:hover{opacity:1!important;}
-    .child-avatar{width:24px;height:24px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;}
-    .child-name{font-size:12.5px;font-weight:500;color:#fff;}
-    .child-meta{font-size:10.5px;color:#9aa19d;}
-
+    .org-switch{margin:12px 12px 4px;padding:8px 10px;border-radius:7px;background:#141a17;border:1px solid #1f2622;display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+    .org-icon{width:22px;height:22px;border-radius:5px;background:#10b981;color:#062e22;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
     .section-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;padding:14px 20px 5px;flex-shrink:0;}
     .nav-list{display:flex;flex-direction:column;padding:0 8px;gap:1px;}
-    .nav-item{display:flex;align-items:center;gap:11px;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:500;color:#b0b6b1;border-left:2px solid transparent;cursor:pointer;transition:all 0.1s;}
+    .nav-item{display:flex;align-items:center;gap:11px;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:500;color:#b0b6b1;border-left:2px solid transparent;cursor:pointer;transition:all 0.1s;user-select:none;}
     .nav-item:hover{color:#fff;background:#141a17;}
-    .nav-item.active{color:#fff;background:#1c2421;border-left-color:#f59e0b;padding-left:10px;}
-    .nav-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:4px;background:#f59e0b22;color:#fbbf24;font-weight:600;}
+    .nav-item.active{color:#fff;background:#1c2421;border-left-color:#10b981;padding-left:10px;}
+    .nav-count{margin-left:auto;font-size:11px;color:#6b716d;font-variant-numeric:tabular-nums;}
+    .nav-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:4px;background:#10b98122;color:#34d399;font-weight:600;}
+    .sidebar-foot{margin-top:auto;padding:12px;border-top:1px solid #1c211e;flex-shrink:0;}
+    .trial-card{padding:12px;border-radius:8px;background:linear-gradient(135deg,#064e3b 0%,#0b0f0d 100%);border:1px solid #14523f;margin-bottom:12px;}
+    .trial-title{font-size:12px;font-weight:600;color:#d1fae5;}
+    .trial-sub{font-size:11px;color:#9aa19d;margin-top:3px;line-height:1.4;}
+    .trial-btn{margin-top:8px;padding:5px 10px;border-radius:5px;font-size:11px;font-weight:600;background:#10b981;color:#062e22;border:none;cursor:pointer;}
+    .profile-row{display:flex;align-items:center;gap:10px;}
+    .profile-avatar{width:30px;height:30px;border-radius:8px;background:#1f2622;color:#34d399;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid #2a322d;flex-shrink:0;}
 
-    .sidebar-foot{margin-top:auto;padding:12px;border-top:1px solid #1c211e;display:flex;align-items:center;gap:10px;flex-shrink:0;}
-    .profile-avatar{width:30px;height:30px;border-radius:8px;background:#1f2622;color:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid #2a322d;flex-shrink:0;}
-
+    /* ── WORKSPACE ── */
     .workspace{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
     .topbar{display:flex;align-items:center;gap:14px;padding:11px 24px;border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
     .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#737773;}
     .breadcrumb .active{font-size:13px;font-weight:600;color:#0f1411;}
     .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-    .change-pw-btn{font-size:11px;color:#737773;background:none;border:1px solid #e3e0da;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;}
-    .change-pw-btn:hover{background:#f4f3ef;}
+    .icon-btn{width:30px;height:30px;border-radius:7px;background:transparent;border:1px solid #eceae5;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#3a3f3c;transition:background 0.1s;}
+    .icon-btn:hover{background:#f4f3ef;}
+    .btn-primary{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;background:#0b0f0d;color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity 0.15s;}
+    .btn-primary:hover{opacity:0.85;}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .btn-secondary{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;background:#fff;color:#3a3f3c;border:1px solid #e3e0da;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+    .btn-secondary:hover{background:#f4f3ef;}
+    .btn-danger{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;cursor:pointer;}
+    .btn-danger:hover{background:#fee2e2;}
 
-    .hero{background:#fff;border-bottom:1px solid #eceae5;padding:18px 24px;display:flex;align-items:center;gap:16px;flex-shrink:0;}
-    .hero-avatar{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;flex-shrink:0;}
-    .hero-name{font-size:20px;font-weight:600;letter-spacing:-0.5px;}
-    .hero-sub{font-size:12px;color:#737773;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-
-    .week-strip{display:flex;gap:5px;margin-left:auto;}
-    .day-pill{width:36px;height:40px;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:600;gap:1px;flex-shrink:0;}
-
-    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
     .stat-cell{padding:16px 20px;border-right:1px solid #eceae5;}
     .stat-cell:last-child{border-right:none;}
     .stat-label{font-size:11px;color:#737773;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
-    .stat-value{font-size:24px;font-weight:600;letter-spacing:-0.5px;margin-top:6px;}
-    .stat-sub{font-size:11px;color:#737773;margin-top:3px;}
+    .stat-value{font-size:26px;font-weight:600;letter-spacing:-0.5px;margin-top:6px;font-variant-numeric:tabular-nums;}
+    .stat-sub{font-size:11px;margin-top:4px;}
 
     .content{flex:1;overflow:auto;padding:20px 24px;}
 
-    .card{background:#fff;border:1px solid #eceae5;border-radius:10px;overflow:hidden;margin-bottom:20px;}
-    .card-head{padding:13px 18px;border-bottom:1px solid #eceae5;display:flex;align-items:center;justify-content:space-between;}
-    .card-title{font-size:13px;font-weight:600;}
-
-    .log-block{padding:16px 18px;border-bottom:1px solid #eceae5;}
-    .log-block:last-child{border-bottom:none;}
-    .log-date{font-size:13px;font-weight:500;margin-bottom:10px;}
-    .log-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
-    .log-section{background:#fafaf9;border:1px solid #eceae5;border-radius:6px;padding:8px 10px;}
-    .log-section-failed{background:#fef2f2!important;border-color:#fecaca!important;}
-    .log-section-title{font-size:10px;color:#737773;text-transform:uppercase;letter-spacing:0.4px;font-weight:600;margin-bottom:4px;}
-    .log-section-val{font-size:12px;font-weight:500;}
-    .log-notes{background:#fffbeb;border:1px solid #fef3c7;border-radius:6px;padding:8px 10px;font-size:12px;color:#3a3f3c;line-height:1.5;}
-    .log-notes-label{font-size:10px;color:#b45309;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;display:block;margin-bottom:3px;}
+    /* Table */
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+    .section-title{font-size:15px;font-weight:600;}
+    .table-wrap{background:#fff;border:1px solid #eceae5;border-radius:10px;overflow:hidden;margin-bottom:24px;}
+    .table-head{display:grid;padding:10px 18px;background:#fafaf7;border-bottom:1px solid #eceae5;font-size:10.5px;color:#737773;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
+    .table-row{display:grid;padding:12px 18px;align-items:center;border-bottom:1px solid #eceae5;font-size:13px;transition:background 0.1s;}
+    .table-row:last-child{border-bottom:none;}
+    .table-row:hover{background:#fafaf9;}
+    .student-name{font-weight:500;}
+    .student-sub{font-size:11px;color:#737773;margin-top:1px;}
 
     .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:500;}
     .pill-success{background:#ecfdf5;color:#047857;}
     .pill-warn{background:#fffbeb;color:#b45309;}
-    .pill-danger{background:#fef2f2;color:#b91c1c;}
+    .pill-default{background:#f4f3ef;color:#3a3f3c;}
 
-    .empty-state{padding:40px;text-align:center;color:#737773;font-size:13px;}
+    .action-btns{display:flex;gap:5px;justify-content:flex-end;}
+    .row-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid #e3e0da;background:#fff;cursor:pointer;color:#3a3f3c;transition:all 0.1s;}
+    .row-btn:hover{background:#f4f3ef;}
+    .row-btn-danger{border-color:#fecaca!important;color:#b91c1c!important;background:#fef2f2!important;}
+    .row-btn-danger:hover{background:#fee2e2!important;}
+
+    .empty-state{padding:48px;text-align:center;color:#737773;font-size:13px;}
     .empty-state .big{font-size:36px;margin-bottom:10px;}
-    .no-student{padding:80px 24px;text-align:center;color:#737773;}
-    .no-student .big{font-size:44px;margin-bottom:12px;}
-    .no-student .title{font-size:16px;font-weight:600;color:#0f1411;margin-bottom:6px;}
-    .loading{padding:40px;text-align:center;color:#737773;font-size:13px;}
 
-    /* CP Modal */
+    /* Invite banner */
+    .invite-banner{background:#0b0f0d;border:1px solid #1c2e26;border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .invite-code-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;}
+    .invite-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.5px;font-weight:500;margin-bottom:4px;}
+    .invite-sub{font-size:11px;color:#9aa19d;margin-top:3px;}
+
+    /* Settings */
+    .settings-card{background:#fff;border:1px solid #eceae5;border-radius:10px;padding:20px;margin-bottom:16px;}
+    .settings-card h3{font-size:14px;font-weight:600;margin-bottom:4px;}
+    .settings-card .desc{font-size:12px;color:#737773;margin-bottom:14px;line-height:1.5;}
+    .settings-card.danger{border-color:#fecaca;}
+    .settings-card.danger h3{color:#b91c1c;}
+
+    /* Modal */
     .modal-overlay{position:fixed;inset:0;background:rgba(11,15,13,0.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(2px);}
-    .modal{background:#fff;border-radius:10px;padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+    .modal{background:#fff;border-radius:10px;padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto;}
     .modal h2{font-size:17px;font-weight:600;margin-bottom:4px;}
-    .modal .sub{font-size:12px;color:#737773;margin-bottom:20px;}
+    .modal .sub{font-size:12px;color:#737773;margin-bottom:20px;line-height:1.5;}
     .field{margin-bottom:14px;}
     .field label{display:block;font-size:10.5px;color:#737773;letter-spacing:0.4px;text-transform:uppercase;font-weight:500;margin-bottom:6px;}
-    .field input{width:100%;padding:9px 12px;border-radius:7px;border:1px solid #e3e0da;background:#fff;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s;color:#0f1411;}
-    .field input:focus{border-color:#f59e0b;}
+    .field input,.field select,.field textarea{width:100%;padding:9px 12px;border-radius:7px;border:1px solid #e3e0da;background:#fff;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s;color:#0f1411;}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:#10b981;}
+    .field textarea{resize:vertical;min-height:70px;}
+    .field .hint{font-size:11px;color:#737773;margin-top:4px;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .section-divider{font-size:10.5px;color:#047857;text-transform:uppercase;letter-spacing:0.4px;font-weight:600;margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid #ecfdf5;}
+    .quality-row{display:flex;gap:7px;margin-top:6px;}
+    .quality-btn{flex:1;padding:7px 0;border-radius:6px;font-size:11.5px;font-family:'IBM Plex Sans',sans-serif;font-weight:500;cursor:pointer;border:1px solid #e3e0da;background:#fff;color:#737773;transition:all 0.15s;text-align:center;}
+    .quality-btn.sel-excellent{background:#ecfdf5;color:#047857;border-color:#6ee7b7;}
+    .quality-btn.sel-good{background:#fffbeb;color:#b45309;border-color:#fcd34d;}
+    .quality-btn.sel-needs{background:#fef2f2;color:#b91c1c;border-color:#fecaca;}
+    .quality-btn.sel-failed{background:#b91c1c;color:#fff;border-color:#b91c1c;}
     .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
-    .btn-primary{padding:8px 16px;border-radius:7px;font-size:12px;font-weight:500;background:#0b0f0d;color:#fff;border:none;cursor:pointer;}
-    .btn-secondary{padding:8px 16px;border-radius:7px;font-size:12px;font-weight:500;background:#fff;color:#3a3f3c;border:1px solid #e3e0da;cursor:pointer;}
     .error-box{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
     .success-box{background:#ecfdf5;border:1px solid #6ee7b7;color:#047857;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .info-box{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .warn-box{background:#fffbeb;border:1px solid #fcd34d;color:#92400e;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .pw-reveal{background:#f4f3ef;border:1px solid #e3e0da;border-radius:7px;padding:14px 16px;margin-bottom:14px;}
+    .pw-reveal .pw-label{font-size:10.5px;color:#737773;text-transform:uppercase;letter-spacing:0.4px;font-weight:500;margin-bottom:6px;}
+    .pw-reveal .pw{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:#0f1411;letter-spacing:2px;word-break:break-all;}
+    .copy-btn{margin-top:8px;font-size:11px;color:#047857;background:none;border:none;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;padding:0;font-weight:500;}
+    .loading{padding:60px;text-align:center;color:#737773;font-size:13px;}
   </style>
 </head>
 <body>
 <div class="page">
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="brand-row">
       <div class="logo-mark">Q</div>
       <div style="line-height:1.2">
         <div class="brand-name">Quran Journey</div>
-        <div class="brand-sub">Parent portal</div>
+        <div class="brand-sub">Teacher portal</div>
       </div>
     </div>
 
-    <div class="child-switcher">
-      <div class="child-label">Your children</div>
-      <div id="child-list">
-        <div style="font-size:11px;color:#6b716d">Loading…</div>
+    <div class="org-switch" id="org-switch-btn">
+      <div class="org-icon" id="org-icon-text">S</div>
+      <div style="line-height:1.2;flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="org-name-sidebar">School</div>
+        <div style="font-size:10.5px;color:#9aa19d" id="org-plan-sidebar">Loading…</div>
       </div>
     </div>
 
-    <div class="section-label">View</div>
+    <div class="section-label">Workspace</div>
     <nav class="nav-list">
-      <div class="nav-item active" id="nav-progress">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-        <span>Progress</span>
+      <div class="nav-item active" id="nav-students" onclick="switchTab('students',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 14a4 4 0 1 0-8 0"/><circle cx="12" cy="7" r="3"/><path d="M22 18a4 4 0 0 0-3-3.87"/><path d="M2 18a4 4 0 0 1 3-3.87"/></svg>
+        <span>Students</span>
+        <span class="nav-count" id="nav-count-students">—</span>
       </div>
-      <div class="nav-item" id="nav-sessions">
+      <div class="nav-item" id="nav-parents" onclick="switchTab('parents',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 19a6 6 0 0 1 12 0"/><circle cx="17" cy="6" r="2"/><path d="M21 14a4 4 0 0 0-7-2.5"/></svg>
+        <span>Parents</span>
+        <span class="nav-count" id="nav-count-parents">—</span>
+      </div>
+      <div class="nav-item" id="nav-logs" onclick="switchTab('logs',this)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>
-        <span>Sessions</span>
+        <span>Progress logs</span>
+        <span class="nav-badge" id="nav-badge-logs" style="display:none">0 today</span>
+      </div>
+      <div class="nav-item" id="nav-settings" onclick="switchTab('settings',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
       </div>
     </nav>
 
     <div class="sidebar-foot">
-      <div class="profile-avatar" id="parent-avatar">P</div>
-      <div style="flex:1;min-width:0;line-height:1.2">
-        <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="parent-name-display">Parent</div>
-        <div style="font-size:11px;color:#9aa19d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="parent-email-display">—</div>
+      <div class="trial-card" id="trial-card" style="display:none">
+        <div class="trial-title">Free trial active</div>
+        <div class="trial-sub" id="trial-sub">Upgrade to keep full access.</div>
+        <button class="trial-btn" onclick="window.location.href='register.html'">See plans →</button>
       </div>
-      <button onclick="signOut()" style="background:none;border:none;cursor:pointer;padding:4px;color:#9aa19d;display:flex;align-items:center">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
-      </button>
+      <div class="profile-row">
+        <div class="profile-avatar" id="sidebar-avatar">S</div>
+        <div style="flex:1;min-width:0;line-height:1.2">
+          <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebar-name">School</div>
+          <div style="font-size:11px;color:#9aa19d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebar-email">—</div>
+        </div>
+        <button onclick="signOut()" style="background:none;border:none;cursor:pointer;padding:4px;color:#9aa19d;display:flex;align-items:center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        </button>
+      </div>
     </div>
   </aside>
 
+  <!-- WORKSPACE -->
   <div class="workspace">
     <div class="topbar">
       <div class="breadcrumb">
-        <span id="topbar-child">Student</span>
+        <span id="topbar-org">School</span>
         <span style="color:#d4d0ca">/</span>
-        <span class="active">Progress</span>
+        <span class="active" id="topbar-page">Students</span>
       </div>
       <div class="topbar-right">
-        <button class="change-pw-btn" onclick="openCpModal()">Change Password</button>
+        <button class="icon-btn" title="Search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="btn-primary" onclick="openLogModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Log session
+        </button>
       </div>
     </div>
 
-    <div id="no-student" class="no-student">
-      <div class="big">📖</div>
-      <div class="title">Select a student</div>
-      <div>Choose your child's name from the sidebar to view their Quran progress.</div>
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-label">Students</div>
+        <div class="stat-value" id="stat-students">—</div>
+        <div class="stat-sub" style="color:#047857" id="stat-students-sub">in your class</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Logs today</div>
+        <div class="stat-value" id="stat-logs">—</div>
+        <div class="stat-sub" style="color:#737773" id="stat-date">—</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Avg sabaq lines</div>
+        <div class="stat-value" id="stat-avg">—</div>
+        <div class="stat-sub" style="color:#737773">this week</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Sessions / week</div>
+        <div class="stat-value" id="stat-week">—</div>
+        <div class="stat-sub" style="color:#737773">logged sessions</div>
+      </div>
     </div>
 
-    <div id="student-content" style="display:none">
-      <div class="hero">
-        <div class="hero-avatar" id="hero-avatar">—</div>
-        <div>
-          <div class="hero-name" id="hero-name">—</div>
-          <div class="hero-sub">
-            <span id="hero-school">—</span>
-            <span id="hero-behavior-pill"></span>
+    <div class="content">
+
+      <!-- STUDENTS TAB -->
+      <div id="tab-students">
+        <div class="section-header">
+          <div class="section-title">Students</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="search" id="student-search" placeholder="Search students…" oninput="renderStudents()" autocomplete="off" name="student-search-field"
+              style="padding:7px 12px;border-radius:7px;border:1px solid #e3e0da;font-size:12px;outline:none;width:180px" />
+            <button class="btn-primary" onclick="openAddStudentModal()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              Add Student
+            </button>
           </div>
         </div>
-        <div class="week-strip" id="week-strip"></div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-cell">
-          <div class="stat-label">Total Sessions</div>
-          <div class="stat-value" id="stat-sessions">—</div>
-          <div class="stat-sub">logged</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Last Session</div>
-          <div class="stat-value" id="stat-last" style="font-size:16px;margin-top:8px">—</div>
-          <div class="stat-sub" id="stat-last-sub">—</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Behavior This Week</div>
-          <div class="stat-value" id="stat-behavior" style="font-size:16px;margin-top:8px">—</div>
-          <div class="stat-sub">last 7 days</div>
+        <div class="table-wrap">
+          <div class="table-head" style="grid-template-columns:2fr 1.2fr 1fr 140px">
+            <div>Student</div><div>Linked Parent</div><div>Last Log</div><div style="text-align:right">Actions</div>
+          </div>
+          <div id="students-list"><div class="loading">Loading students…</div></div>
         </div>
       </div>
 
-      <div class="content">
-        <div class="card">
-          <div class="card-head">
-            <span class="card-title">Recent Sessions</span>
-            <span id="last-updated" style="font-size:11px;color:#737773"></span>
+      <!-- PARENTS TAB -->
+      <div id="tab-parents" style="display:none">
+        <div class="invite-banner">
+          <div>
+            <div class="invite-label">School invite code</div>
+            <div class="invite-code-val" id="invite-code-display">—</div>
+            <div class="invite-sub">Share with parents · they register at <strong>join.html</strong></div>
           </div>
-          <div id="logs-list"><div class="loading">Loading…</div></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-secondary" onclick="copyInviteCode()" style="background:#141a17;border-color:#1f2622;color:#e7e5e0">Copy Code</button>
+            <button class="btn-secondary" onclick="copyJoinLink()" style="background:#141a17;border-color:#1f2622;color:#e7e5e0">Copy Join Link</button>
+            <button class="btn-secondary" onclick="regenerateInviteCode()" style="background:#141a17;border-color:#1f2622;color:#9aa19d">New Code</button>
+          </div>
+        </div>
+        <div class="section-header">
+          <div class="section-title">Parents</div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head" style="grid-template-columns:1.5fr 1.5fr 1.5fr 80px">
+            <div>Name</div><div>Email</div><div>Linked Students</div><div style="text-align:right">Actions</div>
+          </div>
+          <div id="parents-list"><div class="loading">Loading parents…</div></div>
         </div>
       </div>
+
+      <!-- LOGS TAB -->
+      <div id="tab-logs" style="display:none">
+        <div class="section-header">
+          <div class="section-title">Progress Logs</div>
+          <button class="btn-primary" onclick="openLogModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Log Progress
+          </button>
+        </div>
+        <div class="table-wrap">
+          <div id="logs-list"><div class="loading">Loading logs…</div></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" style="display:none">
+        <div class="settings-card">
+          <h3>Account</h3>
+          <p class="desc">Signed in as <span id="settings-email" style="font-weight:500;color:#0f1411"></span></p>
+          <div id="settings-org-name" style="font-size:13px;color:#737773;margin-bottom:14px"></div>
+          <button class="btn-secondary" onclick="openChangePasswordModal()">Change Password</button>
+        </div>
+        <div class="settings-card">
+          <h3>Subscription</h3>
+          <p class="desc">Manage your Quran Journey plan.</p>
+          <div id="subscription-status" style="margin-bottom:14px;font-size:13px;color:#3a3f3c"></div>
+          <button class="btn-danger" onclick="openCancelModal()">Cancel Subscription</button>
+        </div>
+        <div class="settings-card danger">
+          <h3>Data & Privacy</h3>
+          <p class="desc">If you cancel, your account is deactivated — not deleted. All student and progress data is preserved. Contact support to reactivate.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
-<!-- CHANGE PASSWORD MODAL -->
-<div class="modal-overlay" id="cp-modal" style="display:none">
+<!-- ── MODALS ── -->
+
+<!-- ADD STUDENT -->
+<div class="modal-overlay" id="add-student-modal" style="display:none">
   <div class="modal">
-    <h2>Change Password</h2>
-    <p class="sub">Set a new password for your account.</p>
+    <h2>Add Student</h2><p class="sub">Add a new student to your class.</p>
+    <div id="add-student-error" class="error-box" style="display:none"></div>
+    <div class="field"><label>Student Name</label><input type="text" id="new-student-name" placeholder="e.g. Yusuf Ahmed" /></div>
+    <div class="field"><label>Linked Parent Account</label><select id="new-student-parent"><option value="">Select parent…</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" onclick="addStudent()">Add Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT STUDENT -->
+<div class="modal-overlay" id="edit-student-modal" style="display:none">
+  <div class="modal">
+    <h2>Edit Student</h2><p class="sub">Update this student's profile.</p>
+    <div id="edit-student-error" class="error-box" style="display:none"></div>
+    <input type="hidden" id="edit-student-id" />
+    <div class="field"><label>Student Name</label><input type="text" id="edit-student-name" placeholder="e.g. Yusuf Ahmed" /></div>
+    <div class="field"><label>Linked Parent Account</label><select id="edit-student-parent"><option value="">No parent linked</option></select></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" onclick="saveEditStudent()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT LOGS MODAL -->
+<div class="modal-overlay" id="student-logs-modal" style="display:none">
+  <div class="modal" style="max-width:680px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <h2 id="student-logs-title">Student Logs</h2>
+      <button onclick="closeModals()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#737773">✕</button>
+    </div>
+    <p class="sub" id="student-logs-sub"></p>
+    <div id="student-logs-content" style="max-height:60vh;overflow-y:auto"><div class="loading">Loading…</div></div>
+  </div>
+</div>
+
+<!-- LOG PROGRESS -->
+<div class="modal-overlay" id="log-modal" style="display:none">
+  <div class="modal">
+    <h2>Log Progress</h2><p class="sub">Record today's session for a student.</p>
+    <div id="log-error" class="error-box" style="display:none"></div>
+    <div class="field"><label>Student</label><select id="log-student-select"><option value="">Select student…</option></select></div>
+    <div class="field"><label>Date</label><input type="date" id="log-date" /></div>
+    <div class="section-divider">Sabaq (New Lesson)</div>
+    <div class="field"><label>New Lines</label><input type="number" id="log-sabaq-lines" min="0" placeholder="e.g. 10" /></div>
+    <div class="field"><label>Result</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('sabaq','Excellent')" id="sq-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('sabaq','Good')" id="sq-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('sabaq','Needs Work')" id="sq-needs">Needs Work</div>
+        <div class="quality-btn" onclick="setQuality('sabaq','Failed')" id="sq-failed">Failed</div>
+      </div>
+    </div>
+    <div class="section-divider">Sabqi (Recent Revision)</div>
+    <div class="field-row">
+      <div class="field"><label>Juz #</label><input type="text" id="log-sabqi-juz" placeholder="e.g. Juz 3" /></div>
+      <div class="field"><label>Pages</label><input type="number" id="log-sabqi-pages" min="0" placeholder="e.g. 4" /></div>
+    </div>
+    <div class="field"><label>Result</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('sabqi','Excellent')" id="sqi-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('sabqi','Good')" id="sqi-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('sabqi','Needs Work')" id="sqi-needs">Needs Work</div>
+        <div class="quality-btn" onclick="setQuality('sabqi','Failed')" id="sqi-failed">Failed</div>
+      </div>
+    </div>
+    <div class="section-divider">Manzil (Old Revision)</div>
+    <div class="field-row">
+      <div class="field"><label>Number of Juz</label><input type="number" id="log-manzil-count" min="0" max="30" placeholder="e.g. 2" /></div>
+      <div class="field"><label>Partial Juz</label>
+        <div class="quality-row" style="margin-top:6px">
+          <div class="quality-btn" onclick="setManzilFraction('¼')" id="mz-frac-quarter">¼</div>
+          <div class="quality-btn" onclick="setManzilFraction('½')" id="mz-frac-half">½</div>
+          <div class="quality-btn" onclick="setManzilFraction('¾')" id="mz-frac-three">¾</div>
+        </div>
+      </div>
+    </div>
+    <div class="field"><label>Which Juz (optional)</label><input type="text" id="log-manzil-juz" placeholder="e.g. Juz 1–3" /></div>
+    <div class="field"><label>Result</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('manzil','Excellent')" id="mz-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('manzil','Good')" id="mz-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('manzil','Needs Work')" id="mz-needs">Needs Work</div>
+        <div class="quality-btn" onclick="setQuality('manzil','Failed')" id="mz-failed">Failed</div>
+      </div>
+    </div>
+    <div class="section-divider">Behavior & Notes</div>
+    <div class="field"><label>Behavior</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('behavior','Excellent')" id="bh-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('behavior','Good')" id="bh-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('behavior','Needs Work')" id="bh-needs">Needs Work</div>
+      </div>
+    </div>
+    <div class="field"><label>Teacher's Notes (optional)</label><textarea id="log-notes" placeholder="Any observations or comments for the parent…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" onclick="submitLog()">Save Log</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD -->
+<div class="modal-overlay" id="change-password-modal" style="display:none">
+  <div class="modal">
+    <h2>Change Password</h2><p class="sub">Set a new password for your account.</p>
     <div id="cp-error" class="error-box" style="display:none"></div>
     <div id="cp-success" class="success-box" style="display:none"></div>
-    <div class="field"><label>New Password</label><input type="password" id="cp-pw" placeholder="Minimum 8 characters" /></div>
-    <div class="field"><label>Confirm Password</label><input type="password" id="cp-pw2" placeholder="Re-enter password" /></div>
+    <div class="field"><label>New Password</label><input type="password" id="cp-new-password" placeholder="Minimum 8 characters" /></div>
+    <div class="field"><label>Confirm Password</label><input type="password" id="cp-new-password2" placeholder="Re-enter password" /></div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeCpModal()">Cancel</button>
-      <button class="btn-primary" id="cp-btn" onclick="savePassword()">Update Password</button>
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" id="cp-btn" onclick="changePassword()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL SUBSCRIPTION -->
+<div class="modal-overlay" id="cancel-modal" style="display:none">
+  <div class="modal">
+    <h2>Cancel Subscription</h2><p class="sub">Your account will be deactivated — not deleted. All data is preserved if you return.</p>
+    <div class="warn-box">⚠️ Students, parents, and progress logs will be saved. You can reactivate by contacting support.</div>
+    <div id="cancel-error" class="error-box" style="display:none"></div>
+    <div id="cancel-success" class="success-box" style="display:none"></div>
+    <div class="field"><label>Type CANCEL to confirm</label><input type="text" id="cancel-confirm" placeholder="CANCEL" /></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Go Back</button>
+      <button class="btn-danger" id="cancel-btn" onclick="cancelSubscription()">Deactivate Account</button>
     </div>
   </div>
 </div>
@@ -230,157 +465,346 @@ const SUPABASE_KEY='sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const BASE='https://propel-paradise.github.io/Quran-Journey';
 
-let currentUser=null,students=[],activeStudent=null;
-const redirectBase=()=>BASE+'/';
+let currentUser=null,students=[],logs=[],parents=[],generatedPassword='',manzilFraction=null;
+const qualityState={sabaq:null,sabqi:null,manzil:null,behavior:null};
+
+function icon(name,size,color){size=size||16;color=color||'currentColor';
+  const p={students:'<path d="M16 14a4 4 0 1 0-8 0"/><circle cx="12" cy="7" r="3"/>',plus:'<path d="M12 5v14M5 12h14"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',logs:'<path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 14h8"/>',};
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">${p[name]||''}</svg>`;}
 
 function pill(kind,text){const m={success:{bg:'#ecfdf5',c:'#047857'},warn:{bg:'#fffbeb',c:'#b45309'},danger:{bg:'#fef2f2',c:'#b91c1c'},neutral:{bg:'#f4f3ef',c:'#3a3f3c'}};const t=m[kind]||m.neutral;return `<span class="pill" style="background:${t.bg};color:${t.c}">${text}</span>`;}
-function qpill(q){if(!q)return'';if(q==='Excellent')return pill('success',q);if(q==='Good')return pill('warn',q);if(q==='Failed')return`<span class="pill pill-danger" style="font-weight:600">Failed</span>`;return pill('danger',q);}
+function qpill(q){if(!q)return'<span style="color:#737773;font-size:11px">—</span>';if(q==='Excellent')return pill('success',q);if(q==='Good')return pill('warn',q);if(q==='Failed')return`<span class="pill" style="background:#fef2f2;color:#b91c1c;font-weight:600">Failed</span>`;return pill('danger',q);}
+
+function setQuality(type,val){
+  qualityState[type]=val;
+  const prefix={sabaq:'sq',sabqi:'sqi',manzil:'mz',behavior:'bh'}[type];
+  ['excellent','good','needs','failed'].forEach(k=>{const el=document.getElementById(`${prefix}-${k}`);if(el)el.className='quality-btn';});
+  const keyMap={'Excellent':'excellent','Good':'good','Needs Work':'needs','Failed':'failed'};
+  const el=document.getElementById(`${prefix}-${keyMap[val]}`);
+  if(el)el.classList.add(val==='Failed'?'sel-failed':`sel-${keyMap[val]}`);
+}
+
+function setManzilFraction(val){
+  if(manzilFraction===val){manzilFraction=null;['quarter','half','three'].forEach(k=>{const el=document.getElementById(`mz-frac-${k}`);if(el)el.className='quality-btn';});return;}
+  manzilFraction=val;
+  ['quarter','half','three'].forEach(k=>{const el=document.getElementById(`mz-frac-${k}`);if(el)el.className='quality-btn';});
+  const km={'¼':'quarter','½':'half','¾':'three'};
+  const el=document.getElementById(`mz-frac-${km[val]}`);
+  if(el)el.classList.add('sel-good');
+}
+
+function switchTab(tab,btn){
+  ['students','parents','logs','settings'].forEach(t=>{
+    document.getElementById(`tab-${t}`).style.display=t===tab?'block':'none';
+    document.getElementById(`nav-${t}`).classList.toggle('active',t===tab);
+  });
+  const labels={students:'Students',parents:'Parents',logs:'Progress Logs',settings:'Settings'};
+  document.getElementById('topbar-page').textContent=labels[tab]||tab;
+}
 
 async function init(){
   const{data:{session}}=await db.auth.getSession();
   if(!session){window.location.href=BASE+'/index.html';return;}
   const{data:u}=await db.from('users').select('*').eq('email',session.user.email).single();
-  if(!u||u.role!=='parent'){window.location.href=BASE+'/index.html';return;}
-  if(u.must_change_password){window.location.href=BASE+'/change-password.html';return;}
+  if(!u||u.role!=='teacher'){window.location.href=BASE+'/index.html';return;}
   currentUser=u;
   const initials=u.name.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
-  document.getElementById('parent-avatar').textContent=initials;
-  document.getElementById('parent-name-display').textContent=u.name;
-  document.getElementById('parent-email-display').textContent=session.user.email;
-  await loadStudents();
-}
-
-const childColors=['#f59e0b','#0ea5e9','#10b981','#8b5cf6','#ef4444'];
-
-async function loadStudents(){
-  const{data}=await db.from('students').select('*').eq('parent_email',currentUser.email).order('name');
-  students=data||[];
-  const cl=document.getElementById('child-list');
-  if(students.length===0){cl.innerHTML='<div style="font-size:11px;color:#6b716d">No students linked to your account yet</div>';return;}
-  cl.innerHTML=students.map((s,i)=>`
-    <div class="child-row" id="child-row-${s.id}" style="opacity:${i===0?1:0.55}" onclick="selectStudent(${s.id})">
-      <div class="child-avatar" style="background:${childColors[i%childColors.length]}">${s.name.split(' ').map(p=>p[0]).join('').slice(0,2)}</div>
-      <div style="flex:1;min-width:0">
-        <div class="child-name">${s.name.split(' ')[0]}</div>
-        <div class="child-meta">${s.name}</div>
-      </div>
-      <span id="child-dot-${s.id}" style="width:6px;height:6px;border-radius:50%;background:#fbbf24;flex-shrink:0;display:${i===0?'block':'none'}"></span>
-    </div>`).join('');
-  if(students.length>0)selectStudent(students[0].id);
-}
-
-async function selectStudent(id){
-  activeStudent=students.find(s=>s.id===id);
-  if(!activeStudent)return;
-
-  // Update sidebar
-  students.forEach((s,i)=>{
-    const row=document.getElementById(`child-row-${s.id}`);const dot=document.getElementById(`child-dot-${s.id}`);
-    if(row)row.style.opacity=s.id===id?'1':'0.55';
-    if(dot)dot.style.display=s.id===id?'block':'none';
-  });
-
-  document.getElementById('no-student').style.display='none';
-  document.getElementById('student-content').style.display='block';
-  document.getElementById('logs-list').innerHTML='<div class="loading">Loading…</div>';
-
-  const idx=students.findIndex(s=>s.id===id);
-  const color=childColors[idx%childColors.length];
-  const initials=activeStudent.name.split(' ').map(p=>p[0]).join('').slice(0,2);
-  document.getElementById('hero-avatar').textContent=initials;
-  document.getElementById('hero-avatar').style.background=`linear-gradient(135deg,${color},${color}aa)`;
-  document.getElementById('hero-name').textContent=activeStudent.name;
-  document.getElementById('topbar-child').textContent=activeStudent.name;
-
-  const{data:logs}=await db.from('progress_logs').select('*').eq('student_id',id).order('date',{ascending:false});
-  const allLogs=logs||[];
-
-  document.getElementById('stat-sessions').textContent=allLogs.length;
-
-  if(allLogs.length>0){
-    const last=allLogs[0];
-    const lastDate=new Date(last.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    document.getElementById('stat-last').textContent=lastDate;
-    document.getElementById('stat-last-sub').textContent=last.sabaq_lines?`${last.sabaq_lines} lines sabaq`:'Session logged';
-    document.getElementById('last-updated').textContent=`Last updated ${lastDate}`;
-  } else {
-    document.getElementById('stat-last').textContent='—';document.getElementById('stat-last-sub').textContent='no logs yet';document.getElementById('last-updated').textContent='';
+  document.getElementById('sidebar-avatar').textContent=initials;
+  document.getElementById('sidebar-name').textContent=u.name;
+  document.getElementById('sidebar-email').textContent=session.user.email;
+  document.getElementById('settings-email').textContent=session.user.email;
+  document.getElementById('topbar-org').textContent=u.name;
+  document.getElementById('log-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('stat-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  if(u.org_id){
+    const{data:org}=await db.from('organizations').select('*').eq('id',u.org_id).single();
+    if(org){
+      const orgInitials=org.name.split(' ').map(p=>p[0]).join('').slice(0,2).toUpperCase();
+      document.getElementById('org-icon-text').textContent=orgInitials;
+      document.getElementById('org-name-sidebar').textContent=org.name;
+      document.getElementById('settings-org-name').textContent=org.name;
+      const planLabel=org.plan==='trial'?'Free Trial':org.plan==='cancelled'?'Cancelled':org.plan==='payment_failed'?'Payment Failed':'Pro';
+      document.getElementById('org-plan-sidebar').textContent=planLabel;
+      document.getElementById('subscription-status').textContent=org.plan==='cancelled'?'⚠️ Cancelled':'Active — '+planLabel;
+      if(org.plan==='trial'){document.getElementById('trial-card').style.display='block';}
+    }
   }
-
-  // Behavior this week
-  const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
-  const weekBehavior=allLogs.filter(l=>new Date(l.date)>=weekAgo&&l.behavior).map(l=>l.behavior);
-  const behaviorEl=document.getElementById('stat-behavior');
-  if(weekBehavior.length>0){
-    const sm={Excellent:3,Good:2,'Needs Work':1};
-    const avg=weekBehavior.reduce((s,b)=>s+(sm[b]||0),0)/weekBehavior.length;
-    const bval=avg>=2.5?'Excellent':avg>=1.5?'Good':'Needs Work';
-    behaviorEl.textContent=bval;
-    const bcolor={Excellent:'#047857',Good:'#b45309','Needs Work':'#b91c1c'}[bval];
-    behaviorEl.style.color=bcolor;
-  } else {behaviorEl.textContent='—';behaviorEl.style.color='';}
-
-  // Weekly streak strip
-  const weekDays=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);weekDays.push(d);}
-  const strip=document.getElementById('week-strip');
-  strip.innerHTML=weekDays.map(d=>{
-    const dStr=d.toISOString().split('T')[0];
-    const isToday=dStr===new Date().toISOString().split('T')[0];
-    const hasLog=allLogs.some(l=>l.date===dStr);
-    const dayLabel=['Su','Mo','Tu','We','Th','Fr','Sa'][d.getDay()];
-    let bg,color,border;
-    if(isToday){bg='#0b0f0d';color='#fff';border='none';}
-    else if(hasLog){bg='#ecfdf5';color='#047857';border='1px solid #6ee7b7';}
-    else{bg='#fafaf9';color='#9b9892';border='1px solid #eceae5';}
-    return `<div class="day-pill" style="background:${bg};color:${color};border:${border||'none'}"><span>${dayLabel}</span><span style="font-size:9px">${d.getDate()}</span></div>`;
-  }).join('');
-
-  renderLogs(allLogs);
+  await loadParents();await loadStudents();await loadLogs();await loadInviteCode();
 }
 
-function renderLogs(logs){
-  const el=document.getElementById('logs-list');
-  if(logs.length===0){el.innerHTML=`<div class="empty-state"><div class="big">📝</div>No progress logged yet. Check back after the next session.</div>`;return;}
-  el.innerHTML=logs.map(l=>{
-    const dateStr=new Date(l.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-    const sabaqFailed=l.sabaq_failed||l.sabaq_quality==='Failed';
-    const sabqiFailed=l.sabqi_failed||l.sabqi_quality==='Failed';
-    const manzilFailed=l.manzil_failed||l.manzil_quality==='Failed';
-    const sabaqVal=[l.sabaq_lines?`${l.sabaq_lines} lines`:null].filter(Boolean).join(' · ')||'—';
-    const sabqiVal=[l.sabqi_juz?`Juz${l.sabqi_juz}`:null,l.sabqi_pages?`${l.sabqi_pages}p`:null].filter(Boolean).join('.')||'—';
-    const manzilVal=[l.manzil_pages!=null?`${l.manzil_pages}${l.manzil_fraction||''}Juz`:(l.manzil_fraction?l.manzil_fraction+'Juz':null),l.manzil_juz].filter(Boolean).join(' · ')||'—';
-    return `<div class="log-block">
-      <div class="log-date">${dateStr}</div>
-      <div class="log-grid">
-        <div class="log-section${sabaqFailed?' log-section-failed':''}">
-          <div class="log-section-title">Sabaq</div>
-          <div class="log-section-val">${sabaqVal}</div>
-          <div style="margin-top:3px">${sabaqFailed?'<span class="pill pill-danger" style="font-weight:600">Failed</span>':qpill(l.sabaq_quality)}</div>
-        </div>
-        <div class="log-section${sabqiFailed?' log-section-failed':''}">
-          <div class="log-section-title">Sabqi</div>
-          <div class="log-section-val">${sabqiVal}</div>
-          <div style="margin-top:3px">${sabqiFailed?'<span class="pill pill-danger" style="font-weight:600">Failed</span>':qpill(l.sabqi_quality)}</div>
-        </div>
-        <div class="log-section${manzilFailed?' log-section-failed':''}">
-          <div class="log-section-title">Manzil</div>
-          <div class="log-section-val">${manzilVal}</div>
-          <div style="margin-top:3px">${manzilFailed?'<span class="pill pill-danger" style="font-weight:600">Failed</span>':qpill(l.manzil_quality)}</div>
-        </div>
-        <div class="log-section">
-          <div class="log-section-title">Behavior</div>
-          <div class="log-section-val">${l.behavior?qpill(l.behavior):'<span style="color:#737773">—</span>'}</div>
-        </div>
-      </div>
-      ${l.teacher_notes?`<div class="log-notes"><span class="log-notes-label">Teacher's Note</span>${l.teacher_notes}</div>`:''}
+async function loadParents(){
+  let q=db.from('users').select('*').eq('role','parent').order('name');
+  if(currentUser.org_id)q=db.from('users').select('*').eq('role','parent').eq('org_id',currentUser.org_id).order('name');
+  const{data}=await q;parents=data||[];renderParents();
+  const sel=document.getElementById('new-student-parent');
+  sel.innerHTML='<option value="">Select parent…</option>'+parents.map(p=>`<option value="${p.email}">${p.name} (${p.email})</option>`).join('');
+  document.getElementById('nav-count-parents').textContent=parents.length;
+}
+
+function renderParents(){
+  const el=document.getElementById('parents-list');
+  if(parents.length===0){el.innerHTML=`<div class="empty-state"><div class="big">👤</div>No parents yet. Share the invite code above with parents so they can register.</div>`;return;}
+  el.innerHTML=parents.map(p=>{
+    const linked=students.filter(s=>s.parent_email===p.email).map(s=>s.name).join(', ')||'<span style="color:#737773">None linked</span>';
+    return `<div class="table-row" style="grid-template-columns:1.5fr 1.5fr 1.5fr 80px">
+      <div class="student-name">${p.name}</div>
+      <div style="font-size:12px;color:#3a3f3c;font-family:'IBM Plex Mono',monospace">${p.email}</div>
+      <div style="font-size:12px">${linked}</div>
+      <div class="action-btns"><button class="row-btn row-btn-danger" onclick="removeParent('${p.email}','${p.name.replace(/'/g,"\\'")}')">Remove</button></div>
     </div>`;
   }).join('');
 }
 
-function openCpModal(){document.getElementById('cp-modal').style.display='flex';document.getElementById('cp-pw').focus();}
-function closeCpModal(){document.getElementById('cp-modal').style.display='none';document.getElementById('cp-pw').value='';document.getElementById('cp-pw2').value='';document.getElementById('cp-error').style.display='none';document.getElementById('cp-success').style.display='none';}
-async function savePassword(){
-  const pw=document.getElementById('cp-pw').value,pw2=document.getElementById('cp-pw2').value;
+async function loadStudents(){
+  let q=db.from('students').select('*').order('name');
+  if(currentUser.org_id)q=db.from('students').select('*').eq('org_id',currentUser.org_id).order('name');
+  const{data}=await q;students=data||[];renderStudents();updateStats();populateStudentSelect();
+  document.getElementById('nav-count-students').textContent=students.length;
+}
+
+async function loadLogs(){
+  const ids=students.map(s=>s.id);
+  if(ids.length===0){logs=[];renderLogs();updateStats();return;}
+  const{data}=await db.from('progress_logs').select('*,students(name)').in('student_id',ids).order('date',{ascending:false}).limit(50);
+  logs=data||[];renderStudents();renderLogs();updateStats();
+}
+
+function renderStudents(){
+  const el=document.getElementById('students-list');
+  const search=(document.getElementById('student-search')?.value||'').toLowerCase();
+  const filtered=students.filter(s=>s.name.toLowerCase().includes(search));
+  if(filtered.length===0){el.innerHTML=students.length===0?`<div class="empty-state"><div class="big">📚</div>No students yet. Add your first student to get started.</div>`:`<div class="empty-state"><div class="big">🔍</div>No students match "${search}".</div>`;return;}
+  el.innerHTML=filtered.map(s=>{
+    const lastLog=logs.find(l=>l.student_id===s.id);
+    const lastDate=lastLog?new Date(lastLog.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—';
+    const linked=parents.find(p=>p.email===s.parent_email);
+    const parentLabel=linked?linked.name:'<span style="color:#737773;font-size:11px">No parent</span>';
+    const lastQ=lastLog?(lastLog.sabaq_quality||''):'';
+    const qpillHtml=lastQ?qpill(lastQ):'';
+    return `<div class="table-row" style="grid-template-columns:2fr 1.2fr 1fr 140px">
+      <div>
+        <div class="student-name">${s.name}</div>
+        <div class="student-sub">${s.parent_email?s.parent_email:'No parent linked'}</div>
+      </div>
+      <div style="font-size:12px">${parentLabel}</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;color:#737773;font-family:'IBM Plex Mono',monospace">${lastDate}</span>
+        ${qpillHtml}
+      </div>
+      <div class="action-btns">
+        <button class="row-btn" onclick="viewStudentLogs(${s.id},'${s.name.replace(/'/g,"\\'")}')">Logs</button>
+        <button class="row-btn" onclick="openEditStudentModal(${s.id})">Edit</button>
+        <button class="row-btn" onclick="quickLog(${s.id})">Log</button>
+        <button class="row-btn row-btn-danger" onclick="deleteStudent(${s.id},'${s.name.replace(/'/g,"\\'")}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderLogs(){
+  const el=document.getElementById('logs-list');
+  if(logs.length===0){el.innerHTML=`<div class="empty-state"><div class="big">📝</div>No logs yet. Log a student's progress to get started.</div>`;return;}
+  const grouped={};logs.forEach(l=>{const n=l.students?.name||'Unknown';if(!grouped[n])grouped[n]=[];grouped[n].push(l);});
+  const sortedNames=Object.keys(grouped).sort();
+  el.innerHTML=sortedNames.map((name,idx)=>{
+    const sLogs=grouped[name];const latest=sLogs[0];
+    const latestDate=new Date(latest.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const rows=sLogs.map(l=>{
+      const dateStr=new Date(l.date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+      const sabaqStr=l.sabaq_lines?`${l.sabaq_lines} lines`:'—';
+      const sabqiStr=[l.sabqi_juz?`Juz${l.sabqi_juz}`:null,l.sabqi_pages?`${l.sabqi_pages}p`:null].filter(Boolean).join('.')||'—';
+      const manzilStr=[l.manzil_pages!=null?`${l.manzil_pages}${l.manzil_fraction||''}Juz`:(l.manzil_fraction?l.manzil_fraction+'Juz':null),l.manzil_juz].filter(Boolean).join(' · ')||'—';
+      return `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;padding:10px 16px;border-bottom:1px solid #f4f3ef;font-size:12px">
+        <div style="color:#737773;font-family:'IBM Plex Mono',monospace;font-size:11px">${dateStr}</div>
+        <div>${sabaqStr} ${l.sabaq_failed?pill('danger','Failed'):qpill(l.sabaq_quality)}</div>
+        <div>${sabqiStr} ${l.sabqi_failed?pill('danger','Failed'):qpill(l.sabqi_quality)}</div>
+        <div>${manzilStr} ${l.manzil_failed?pill('danger','Failed'):qpill(l.manzil_quality)}</div>
+        <div>${qpill(l.behavior)} <span style="color:#737773;font-size:11px;margin-left:4px">${l.teacher_notes||''}</span></div>
+      </div>`;
+    }).join('');
+    return `<div style="border-bottom:1px solid #eceae5">
+      <div onclick="toggleGroup('grp-${idx}')" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;background:#fafaf7;user-select:none">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-weight:600;font-size:13px">${name}</span>
+          <span style="font-size:11px;color:#737773">${sLogs.length} session${sLogs.length!==1?'s':''}</span>
+          <span style="font-size:11px;color:#737773">Last: ${latestDate}</span>
+          ${qpill(latest.sabaq_quality)}
+        </div>
+        <span id="chev-${idx}" style="color:#737773;font-size:12px;transition:transform 0.2s">▼</span>
+      </div>
+      <div id="grp-${idx}" style="display:none">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;padding:8px 16px;background:#f4f3ef;border-bottom:1px solid #eceae5;font-size:10px;color:#737773;text-transform:uppercase;letter-spacing:0.3px;font-weight:500">
+          <div>Date</div><div>Sabaq</div><div>Sabqi</div><div>Manzil</div><div>Behavior</div>
+        </div>
+        ${rows}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleGroup(id){const el=document.getElementById(id);const idx=id.replace('grp-','');const chev=document.getElementById(`chev-${idx}`);const isOpen=el.style.display!=='none';el.style.display=isOpen?'none':'block';chev.style.transform=isOpen?'':'rotate(180deg)';}
+
+function updateStats(){
+  document.getElementById('stat-students').textContent=students.length;
+  const today=new Date().toISOString().split('T')[0];
+  const todayLogs=logs.filter(l=>l.date===today);
+  document.getElementById('stat-logs').textContent=todayLogs.length;
+  const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
+  const weekLogs=logs.filter(l=>new Date(l.date)>=weekAgo);
+  const weekLines=weekLogs.reduce((s,l)=>s+(l.sabaq_lines||0),0);
+  document.getElementById('stat-avg').textContent=students.length>0?(weekLines/students.length).toFixed(1):'0';
+  document.getElementById('stat-week').textContent=weekLogs.length;
+  const badge=document.getElementById('nav-badge-logs');
+  if(todayLogs.length>0){badge.textContent=todayLogs.length+' today';badge.style.display='inline';}
+}
+
+function populateStudentSelect(){
+  const sel=document.getElementById('log-student-select');
+  sel.innerHTML='<option value="">Select student…</option>'+students.map(s=>`<option value="${s.id}">${s.name}</option>`).join('');
+}
+
+// ── INVITE CODE ──────────────────────────────────────────────
+function generateCode(){const c='ABCDEFGHJKMNPQRSTUVWXYZ23456789';return Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join('')+'-'+Array.from({length:4},()=>c[Math.floor(Math.random()*c.length)]).join('');}
+async function loadInviteCode(){if(!currentUser.org_id)return;const{data:org}=await db.from('organizations').select('invite_code').eq('id',currentUser.org_id).single();if(org&&org.invite_code){document.getElementById('invite-code-display').textContent=org.invite_code;}else{const code=generateCode();await db.from('organizations').update({invite_code:code}).eq('id',currentUser.org_id);document.getElementById('invite-code-display').textContent=code;}}
+async function regenerateInviteCode(){if(!confirm('Generate a new invite code? The old code will stop working.'))return;const code=generateCode();await db.from('organizations').update({invite_code:code}).eq('id',currentUser.org_id);document.getElementById('invite-code-display').textContent=code;}
+function copyInviteCode(){const code=document.getElementById('invite-code-display').textContent;navigator.clipboard.writeText(code).then(()=>{const btn=event.target;btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy Code',2000);});}
+function copyJoinLink(){const code=document.getElementById('invite-code-display').textContent;const url=`${BASE}/join.html?code=${encodeURIComponent(code)}`;navigator.clipboard.writeText(url).then(()=>{const btn=event.target;btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent='Copy Join Link',2000);});}
+
+// ── MODALS ──────────────────────────────────────────────────
+function openAddStudentModal(){document.getElementById('add-student-modal').style.display='flex';document.getElementById('new-student-name').focus();}
+function openLogModal(){document.getElementById('log-modal').style.display='flex';}
+function openCancelModal(){document.getElementById('cancel-modal').style.display='flex';}
+function openChangePasswordModal(){document.getElementById('change-password-modal').style.display='flex';document.getElementById('cp-new-password').focus();}
+function quickLog(id){openLogModal();setTimeout(()=>{document.getElementById('log-student-select').value=id;},50);}
+
+function openEditStudentModal(id){
+  const s=students.find(st=>st.id===id);if(!s)return;
+  document.getElementById('edit-student-id').value=s.id;
+  document.getElementById('edit-student-name').value=s.name;
+  const sel=document.getElementById('edit-student-parent');
+  sel.innerHTML='<option value="">No parent linked</option>'+parents.map(p=>`<option value="${p.email}"${p.email===s.parent_email?' selected':''}>${p.name} (${p.email})</option>`).join('');
+  document.getElementById('edit-student-modal').style.display='flex';
+  document.getElementById('edit-student-name').focus();
+}
+
+async function viewStudentLogs(studentId,studentName){
+  document.getElementById('student-logs-modal').style.display='flex';
+  document.getElementById('student-logs-title').textContent=studentName;
+  document.getElementById('student-logs-sub').textContent=`All sessions for ${studentName}`;
+  document.getElementById('student-logs-content').innerHTML='<div class="loading">Loading…</div>';
+  const{data}=await db.from('progress_logs').select('*').eq('student_id',studentId).order('date',{ascending:false});
+  const sLogs=data||[];
+  if(sLogs.length===0){document.getElementById('student-logs-content').innerHTML='<div class="empty-state"><div class="big">📝</div>No logs yet for this student.</div>';return;}
+  document.getElementById('student-logs-content').innerHTML=sLogs.map(l=>{
+    const dateStr=new Date(l.date).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+    const sabaqStr=l.sabaq_lines?`${l.sabaq_lines} lines`:'—';
+    const sabqiStr=[l.sabqi_juz?`Juz${l.sabqi_juz}`:null,l.sabqi_pages?`${l.sabqi_pages}p`:null].filter(Boolean).join('.')||'—';
+    const manzilStr=[l.manzil_pages!=null?`${l.manzil_pages}${l.manzil_fraction||''}Juz`:(l.manzil_fraction?l.manzil_fraction+'Juz':null),l.manzil_juz].filter(Boolean).join(' · ')||'—';
+    return `<div style="padding:14px 0;border-bottom:1px solid #eceae5">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:12px;font-weight:600">${dateStr}</span>
+        ${qpill(l.behavior)}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <div style="background:#fafaf9;border:1px solid #eceae5;border-radius:6px;padding:8px 10px">
+          <div style="font-size:10px;text-transform:uppercase;color:#737773;font-weight:600;margin-bottom:4px">Sabaq</div>
+          <div style="font-size:12px;font-weight:500">${sabaqStr}</div>
+          <div style="margin-top:3px">${l.sabaq_failed?pill('danger','Failed'):qpill(l.sabaq_quality)}</div>
+        </div>
+        <div style="background:#fafaf9;border:1px solid #eceae5;border-radius:6px;padding:8px 10px">
+          <div style="font-size:10px;text-transform:uppercase;color:#737773;font-weight:600;margin-bottom:4px">Sabqi</div>
+          <div style="font-size:12px;font-weight:500">${sabqiStr}</div>
+          <div style="margin-top:3px">${l.sabqi_failed?pill('danger','Failed'):qpill(l.sabqi_quality)}</div>
+        </div>
+        <div style="background:#fafaf9;border:1px solid #eceae5;border-radius:6px;padding:8px 10px">
+          <div style="font-size:10px;text-transform:uppercase;color:#737773;font-weight:600;margin-bottom:4px">Manzil</div>
+          <div style="font-size:12px;font-weight:500">${manzilStr}</div>
+          <div style="margin-top:3px">${l.manzil_failed?pill('danger','Failed'):qpill(l.manzil_quality)}</div>
+        </div>
+      </div>
+      ${l.teacher_notes?`<div style="margin-top:8px;background:#fffbeb;border:1px solid #fef3c7;border-radius:6px;padding:8px 10px;font-size:12px;color:#3a3f3c;line-height:1.5"><span style="font-size:10px;color:#b45309;font-weight:600;text-transform:uppercase;display:block;margin-bottom:2px">Note</span>${l.teacher_notes}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function closeModals(){
+  document.querySelectorAll('.modal-overlay').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.error-box').forEach(el=>el.style.display='none');
+  ['new-student-name','log-sabaq-lines','log-sabqi-juz','log-sabqi-pages','log-manzil-count','log-manzil-juz','log-notes','cancel-confirm','cp-new-password','cp-new-password2','edit-student-name'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('new-student-parent').value='';
+  Object.keys(qualityState).forEach(k=>qualityState[k]=null);
+  manzilFraction=null;
+  document.querySelectorAll('.quality-btn').forEach(b=>b.className='quality-btn');
+  generatedPassword='';
+}
+
+async function addStudent(){
+  const name=document.getElementById('new-student-name').value.trim();
+  const parentEmail=document.getElementById('new-student-parent').value;
+  const errEl=document.getElementById('add-student-error');
+  if(!name){errEl.textContent='Please enter a student name.';errEl.style.display='block';return;}
+  const payload={name,parent_email:parentEmail||null};
+  if(currentUser.org_id)payload.org_id=currentUser.org_id;
+  const{error}=await db.from('students').insert(payload);
+  if(error){errEl.textContent=error.message;errEl.style.display='block';return;}
+  closeModals();await loadStudents();await loadLogs();
+}
+
+async function saveEditStudent(){
+  const id=parseInt(document.getElementById('edit-student-id').value);
+  const name=document.getElementById('edit-student-name').value.trim();
+  const parentEmail=document.getElementById('edit-student-parent').value;
+  const errEl=document.getElementById('edit-student-error');
+  if(!name){errEl.textContent='Please enter a student name.';errEl.style.display='block';return;}
+  const{error}=await db.from('students').update({name,parent_email:parentEmail||null}).eq('id',id);
+  if(error){errEl.textContent=error.message;errEl.style.display='block';return;}
+  closeModals();await loadStudents();await loadLogs();
+}
+
+async function removeParent(email,name){
+  if(!confirm(`Remove ${name}? Their linked students will be unlinked but student records stay.`))return;
+  await db.from('students').update({parent_email:null}).eq('parent_email',email);
+  await db.from('users').delete().eq('email',email);
+  await loadParents();await loadStudents();
+}
+
+async function submitLog(){
+  const studentId=parseInt(document.getElementById('log-student-select').value);
+  const date=document.getElementById('log-date').value;
+  const errEl=document.getElementById('log-error');
+  if(!studentId){errEl.textContent='Please select a student.';errEl.style.display='block';return;}
+  if(!date){errEl.textContent='Please select a date.';errEl.style.display='block';return;}
+  const sabaqFailed=qualityState.sabaq==='Failed';
+  const{error}=await db.from('progress_logs').insert({
+    student_id:studentId,date,
+    sabaq_lines:parseInt(document.getElementById('log-sabaq-lines').value)||null,
+    sabaq_quality:sabaqFailed?null:qualityState.sabaq,
+    sabaq_failed:sabaqFailed,
+    sabqi_juz:document.getElementById('log-sabqi-juz').value.trim()||null,
+    sabqi_pages:parseInt(document.getElementById('log-sabqi-pages').value)||null,
+    sabqi_quality:qualityState.sabqi==='Failed'?null:qualityState.sabqi,
+    sabqi_failed:qualityState.sabqi==='Failed',
+    manzil_fraction:manzilFraction,
+    manzil_juz:document.getElementById('log-manzil-juz').value.trim()||null,
+    manzil_pages:parseInt(document.getElementById('log-manzil-count').value)||null,
+    manzil_quality:qualityState.manzil==='Failed'?null:qualityState.manzil,
+    manzil_failed:qualityState.manzil==='Failed',
+    behavior:qualityState.behavior,
+    teacher_notes:document.getElementById('log-notes').value.trim()||null,
+  });
+  if(error){errEl.textContent=error.message;errEl.style.display='block';return;}
+  closeModals();await loadStudents();await loadLogs();
+}
+
+async function deleteStudent(id,name){
+  if(!confirm(`Remove ${name}? This will also delete all their progress logs.`))return;
+  await db.from('progress_logs').delete().eq('student_id',id);
+  await db.from('students').delete().eq('id',id);
+  await loadStudents();await loadLogs();
+}
+
+async function changePassword(){
+  const pw=document.getElementById('cp-new-password').value,pw2=document.getElementById('cp-new-password2').value;
   const btn=document.getElementById('cp-btn'),errEl=document.getElementById('cp-error'),sucEl=document.getElementById('cp-success');
   if(pw.length<8){errEl.textContent='Password must be at least 8 characters.';errEl.style.display='block';return;}
   if(pw!==pw2){errEl.textContent='Passwords do not match.';errEl.style.display='block';return;}
@@ -388,11 +812,22 @@ async function savePassword(){
   const{error}=await db.auth.updateUser({password:pw});
   btn.disabled=false;btn.textContent='Update Password';
   if(error){errEl.textContent=error.message;errEl.style.display='block';}
-  else{sucEl.textContent='Password updated!';sucEl.style.display='block';document.getElementById('cp-pw').value='';document.getElementById('cp-pw2').value='';}
+  else{sucEl.textContent='Password updated successfully!';sucEl.style.display='block';document.getElementById('cp-new-password').value='';document.getElementById('cp-new-password2').value='';}
 }
-document.getElementById('cp-modal').addEventListener('click',e=>{if(e.target===document.getElementById('cp-modal'))closeCpModal();});
+
+async function cancelSubscription(){
+  const val=document.getElementById('cancel-confirm').value.trim();
+  const errEl=document.getElementById('cancel-error'),sucEl=document.getElementById('cancel-success'),btn=document.getElementById('cancel-btn');
+  if(val!=='CANCEL'){errEl.textContent='Please type CANCEL to confirm.';errEl.style.display='block';return;}
+  btn.disabled=true;btn.textContent='Processing…';
+  if(currentUser.org_id){await db.from('organizations').update({is_active:false,plan:'cancelled'}).eq('id',currentUser.org_id);await db.from('users').update({is_active:false}).eq('org_id',currentUser.org_id);}
+  sucEl.textContent='Subscription cancelled. Signing you out…';sucEl.style.display='block';
+  setTimeout(async()=>{await db.auth.signOut();window.location.href=BASE+'/index.html';},2500);
+}
 
 async function signOut(){await db.auth.signOut();window.location.href=BASE+'/index.html';}
+
+document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModals();});});
 init();
 </script>
 </body>
