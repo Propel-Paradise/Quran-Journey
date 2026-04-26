@@ -387,7 +387,7 @@ async function selectStudent(id){
 
   if(allLogs.length>0){
     const last=allLogs[0];
-    const lastDate=new Date(last.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const lastDate=new Date(last.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
     document.getElementById('stat-last').textContent=lastDate;
     document.getElementById('stat-last-sub').textContent=last.sabaq_lines?`${last.sabaq_lines} lines sabaq`:'Session logged';
     document.getElementById('last-updated').textContent=`Last updated ${lastDate}`;
@@ -397,7 +397,7 @@ async function selectStudent(id){
 
   // Behavior this week
   const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
-  const weekBehavior=allLogs.filter(l=>new Date(l.date)>=weekAgo&&l.behavior).map(l=>l.behavior);
+  const weekBehavior=allLogs.filter(l=>new Date(l.date+'T12:00:00')>=weekAgo&&l.behavior).map(l=>l.behavior);
   const behaviorEl=document.getElementById('stat-behavior');
   if(weekBehavior.length>0){
     const sm={Excellent:3,Good:2,'Needs Work':1};
@@ -435,7 +435,7 @@ function renderLogs(logs){
   const el=document.getElementById('logs-list');
   if(logs.length===0){el.innerHTML=`<div class="empty-state"><div class="big">📝</div>No progress logged yet. Check back after the next session.</div>`;return;}
   el.innerHTML=logs.map(l=>{
-    const dateStr=new Date(l.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    const dateStr=new Date(l.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
     const sabaqFailed=l.sabaq_failed||l.sabaq_quality==='Failed';
     const sabqiFailed=l.sabqi_failed||l.sabqi_quality==='Failed';
     const manzilFailed=l.manzil_failed||l.manzil_quality==='Failed';
@@ -577,7 +577,7 @@ async function renderSessionsTab() {
   document.getElementById('sessions-count').textContent = totalSessions + ' sessions total';
   if (allLogs.length === 0) { document.getElementById('sessions-list').innerHTML = '<div class="empty-state"><div class="big">📝</div>No sessions logged yet.</div>'; return; }
   document.getElementById('sessions-list').innerHTML = allLogs.map(l => {
-    const dateStr = new Date(l.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const dateStr = new Date(l.date+'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const sabaqStr = l.sabaq_lines ? l.sabaq_lines + ' lines' : '—';
     const sabqiStr = [l.sabqi_juz ? 'Juz ' + l.sabqi_juz : null, l.sabqi_pages ? l.sabqi_pages + 'p' : null].filter(Boolean).join(' · ') || '—';
     const manzilStr = [l.manzil_pages != null ? l.manzil_pages + (l.manzil_fraction ? ' ' + l.manzil_fraction : '') + ' Juz' : (l.manzil_fraction ? l.manzil_fraction + ' Juz' : null), l.manzil_juz].filter(Boolean).join(' · ') || '—';
