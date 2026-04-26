@@ -11,55 +11,63 @@
     html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:#0b0f0d;color:#e7e5e0;overflow:hidden;}
     .page{display:flex;height:100vh;}
 
-    .sidebar{width:220px;background:#070a08;border-right:1px solid #1c211e;display:flex;flex-direction:column;flex-shrink:0;}
-    .brand-row{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #1c211e;}
-    .logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;}
+    /* Sidebar — matches school/parent exactly but with purple accent */
+    .sidebar{width:248px;background:#0b0f0d;color:#e7e5e0;display:flex;flex-direction:column;flex-shrink:0;}
+    .brand-row{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #1c211e;flex-shrink:0;}
+    .logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;}
     .brand-name{font-size:13px;font-weight:600;color:#fff;}
-    .admin-badge{font-size:9px;background:#2d1b69;color:#a78bfa;padding:2px 6px;border-radius:4px;font-weight:600;letter-spacing:0.5px;}
-    .nav-list{padding:12px 8px;display:flex;flex-direction:column;gap:1px;}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:500;color:#b0b6b1;border-left:2px solid transparent;cursor:pointer;transition:all 0.1s;}
-    .nav-item.active{color:#fff;background:#1c1535;border-left-color:#8b5cf6;}
-    .sidebar-foot{margin-top:auto;padding:12px;border-top:1px solid #1c211e;}
+    .brand-sub{font-size:11px;color:#9aa19d;}
+    .admin-badge{font-size:9px;background:#2d1b69;color:#a78bfa;padding:2px 7px;border-radius:10px;font-weight:600;letter-spacing:0.5px;}
+    .section-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;padding:14px 20px 5px;flex-shrink:0;}
+    .nav-list{display:flex;flex-direction:column;padding:0 8px;gap:1px;}
+    .nav-item{display:flex;align-items:center;gap:11px;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:500;color:#b0b6b1;border-left:2px solid transparent;cursor:pointer;transition:all 0.1s;}
+    .nav-item:hover{color:#fff;background:#141a17;}
+    .nav-item.active{color:#fff;background:#1c1535;border-left-color:#8b5cf6;padding-left:10px;}
+    .sidebar-foot{margin-top:auto;padding:12px;border-top:1px solid #1c211e;flex-shrink:0;}
+    .profile-row{display:flex;align-items:center;gap:10px;}
+    .profile-avatar{width:30px;height:30px;border-radius:8px;background:#1f2622;color:#a78bfa;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid #2a322d;flex-shrink:0;}
 
-    .workspace{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-    .topbar{display:flex;align-items:center;gap:14px;padding:11px 24px;border-bottom:1px solid #1c211e;background:#0b0f0d;flex-shrink:0;}
-    .topbar-title{font-size:13px;font-weight:600;color:#fff;}
+    /* Workspace */
+    .workspace{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#fafaf9;color:#0f1411;}
+    .topbar{display:flex;align-items:center;gap:14px;padding:11px 24px;border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
+    .breadcrumb{font-size:12px;color:#737773;}
+    .topbar-title{font-size:13px;font-weight:600;color:#0f1411;}
     .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
 
-    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #1c211e;background:#0b0f0d;flex-shrink:0;}
-    .stat-cell{padding:16px 20px;border-right:1px solid #1c211e;}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
+    .stat-cell{padding:16px 20px;border-right:1px solid #eceae5;}
     .stat-cell:last-child{border-right:none;}
-    .stat-label{font-size:11px;color:#6b716d;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
-    .stat-value{font-size:26px;font-weight:600;letter-spacing:-0.5px;margin-top:6px;color:#fff;}
-    .stat-sub{font-size:11px;margin-top:3px;color:#9aa19d;}
+    .stat-label{font-size:11px;color:#737773;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
+    .stat-value{font-size:26px;font-weight:600;letter-spacing:-0.5px;margin-top:6px;color:#0f1411;}
+    .stat-sub{font-size:11px;margin-top:3px;color:#737773;}
 
     .content{flex:1;overflow:auto;padding:20px 24px;}
     .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-    .section-title{font-size:15px;font-weight:600;color:#fff;}
+    .section-title{font-size:15px;font-weight:600;color:#0f1411;}
 
-    .search-bar{padding:7px 12px;border-radius:7px;border:1px solid #1c2e26;background:#111814;font-size:12px;outline:none;width:200px;color:#e7e5e0;font-family:'IBM Plex Sans',sans-serif;}
+    .search-bar{padding:7px 12px;border-radius:7px;border:1px solid #e3e0da;background:#fff;font-size:12px;outline:none;width:200px;color:#0f1411;font-family:'IBM Plex Sans',sans-serif;}
     .search-bar:focus{border-color:#8b5cf6;}
-    .search-bar::placeholder{color:#4a5050;}
+    .search-bar::placeholder{color:#9b9892;}
 
-    .table-wrap{background:#111814;border:1px solid #1c2e26;border-radius:10px;overflow:hidden;margin-bottom:24px;}
-    .table-head{display:grid;padding:10px 18px;background:#0b0f0d;border-bottom:1px solid #1c2e26;font-size:10.5px;color:#6b716d;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
-    .table-row{display:grid;padding:12px 18px;align-items:center;border-bottom:1px solid #1c2e26;font-size:13px;transition:background 0.1s;}
+    .table-wrap{background:#fff;border:1px solid #eceae5;border-radius:10px;overflow:hidden;margin-bottom:24px;}
+    .table-head{display:grid;padding:10px 18px;background:#fafaf7;border-bottom:1px solid #eceae5;font-size:10.5px;color:#737773;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
+    .table-row{display:grid;padding:12px 18px;align-items:center;border-bottom:1px solid #eceae5;font-size:13px;transition:background 0.1s;color:#0f1411;}
     .table-row:last-child{border-bottom:none;}
-    .table-row:hover{background:#141a17;}
+    .table-row:hover{background:#fafaf9;}
 
     .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:500;}
-    .pill-active{background:#064e3b;color:#34d399;}
-    .pill-trial{background:#1e1b4b;color:#a78bfa;}
-    .pill-cancelled{background:#1f1010;color:#f87171;}
-    .pill-failed{background:#1c1105;color:#fbbf24;}
+    .pill-active{background:#ecfdf5;color:#047857;}
+    .pill-trial{background:#f5f3ff;color:#7c3aed;}
+    .pill-cancelled{background:#fef2f2;color:#b91c1c;}
+    .pill-failed{background:#fffbeb;color:#b45309;}
 
-    .row-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid #1c2e26;background:#141a17;cursor:pointer;color:#b0b6b1;transition:all 0.1s;}
-    .row-btn:hover{background:#1c2e26;}
-    .row-btn-success{border-color:#14523f!important;color:#34d399!important;}
-    .row-btn-danger{border-color:#3d1515!important;color:#f87171!important;}
+    .row-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid #e3e0da;background:#fff;cursor:pointer;color:#3a3f3c;transition:all 0.1s;}
+    .row-btn:hover{background:#f4f3ef;}
+    .row-btn-success{border-color:#6ee7b7!important;color:#047857!important;background:#ecfdf5!important;}
+    .row-btn-danger{border-color:#fecaca!important;color:#b91c1c!important;background:#fef2f2!important;}
 
-    .empty-state{padding:48px;text-align:center;color:#6b716d;font-size:13px;}
-    .loading{padding:60px;text-align:center;color:#6b716d;font-size:13px;}
+    .empty-state{padding:48px;text-align:center;color:#737773;font-size:13px;}
+    .loading{padding:60px;text-align:center;color:#737773;font-size:13px;}
 
     /* Login */
     .login-screen{display:flex;align-items:center;justify-content:center;height:100vh;width:100vw;position:fixed;inset:0;background:#0b0f0d;z-index:100;}
@@ -74,14 +82,14 @@
     .btn-admin:disabled{opacity:0.5;cursor:not-allowed;}
     .error{background:#1f1010;border:1px solid #3d1515;color:#f87171;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
 
-    /* Deactivate modal */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(2px);}
-    .modal{background:#111814;border:1px solid #1c2e26;border-radius:10px;padding:28px;width:100%;max-width:400px;}
-    .modal h2{font-size:17px;font-weight:600;color:#fff;margin-bottom:4px;}
-    .modal .sub{font-size:12px;color:#9aa19d;margin-bottom:16px;}
-    .warn-box{background:#1c1105;border:1px solid #3d2205;color:#fbbf24;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(11,15,13,0.7);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(2px);}
+    .modal{background:#fff;border:1px solid #eceae5;border-radius:10px;padding:28px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.15);}
+    .modal h2{font-size:17px;font-weight:600;color:#0f1411;margin-bottom:4px;}
+    .modal .sub{font-size:12px;color:#737773;margin-bottom:16px;}
+    .warn-box{background:#fffbeb;border:1px solid #fcd34d;color:#b45309;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
     .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
-    .success-msg{background:#064e3b;border:1px solid #14523f;color:#34d399;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .success-msg{background:#ecfdf5;border:1px solid #6ee7b7;color:#047857;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
   </style>
 </head>
 <body>
@@ -106,11 +114,13 @@
     <aside class="sidebar">
       <div class="brand-row">
         <div class="logo-mark">Q</div>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:#fff">Quran Journey</div>
-          <div style="font-size:10px;color:#6b716d">Admin panel</div>
+        <div style="line-height:1.2;flex:1">
+          <div class="brand-name">Quran Journey</div>
+          <div class="brand-sub">Admin panel</div>
         </div>
+        <span class="admin-badge">ADMIN</span>
       </div>
+      <div class="section-label">Management</div>
       <nav class="nav-list">
         <div class="nav-item active">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
@@ -118,19 +128,27 @@
         </div>
       </nav>
       <div class="sidebar-foot">
-        <button onclick="adminSignOut()" style="background:none;border:none;cursor:pointer;font-size:12px;color:#6b716d;font-family:'IBM Plex Sans',sans-serif;display:flex;align-items:center;gap:8px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
-          Sign out
-        </button>
+        <div class="profile-row">
+          <div class="profile-avatar">AD</div>
+          <div style="flex:1;min-width:0;line-height:1.2">
+            <div style="font-size:12px;font-weight:600;color:#fff">Admin</div>
+            <div style="font-size:11px;color:#9aa19d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">muhammadkhamd786@gmail.com</div>
+          </div>
+          <button onclick="adminSignOut()" style="background:none;border:none;cursor:pointer;color:#6b716d;display:flex;padding:4px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+          </button>
+        </div>
       </div>
     </aside>
 
     <div class="workspace">
       <div class="topbar">
+        <span class="breadcrumb">Admin</span>
+        <span style="color:#d4d0ca;margin:0 4px;font-size:12px">/</span>
         <span class="topbar-title">Organizations</span>
         <div class="topbar-right">
-          <span style="font-size:11px;color:#6b716d" id="last-refreshed"></span>
-          <button onclick="loadOrgs()" style="padding:5px 10px;border-radius:6px;border:1px solid #1c2e26;background:#141a17;color:#b0b6b1;font-size:11px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">Refresh</button>
+          <span style="font-size:11px;color:#737773" id="last-refreshed"></span>
+          <button onclick="loadOrgs()" style="padding:6px 12px;border-radius:7px;border:1px solid #e3e0da;background:#fff;color:#3a3f3c;font-size:11px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:500">Refresh</button>
         </div>
       </div>
 
