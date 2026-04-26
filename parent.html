@@ -354,8 +354,18 @@ async function selectStudent(id){
     if(dot)dot.style.display=s.id===id?'block':'none';
   });
 
-  document.getElementById('no-student').style.display='none';
-  document.getElementById('student-content').style.display='block';
+  // Only show student-content if we're on the progress tab
+  const activeTab = document.querySelector('.nav-item.active')?.id?.replace('nav-','') || 'progress';
+  document.getElementById('no-student').style.display = 'none';
+  if (activeTab === 'progress') {
+    document.getElementById('student-content').style.display = 'block';
+  } else if (activeTab === 'sessions') {
+    document.getElementById('tab-sessions').style.display = 'flex';
+    document.getElementById('student-content').style.display = 'none';
+  } else if (activeTab === 'settings') {
+    document.getElementById('tab-settings').style.display = 'flex';
+    document.getElementById('student-content').style.display = 'none';
+  }
   document.getElementById('logs-list').innerHTML='<div class="loading">Loading…</div>';
 
   const idx=students.findIndex(s=>s.id===id);
@@ -410,6 +420,11 @@ async function selectStudent(id){
   }).join('');
 
   renderLogs(allLogs);
+
+  // If sessions tab is active, refresh it too
+  const activeTab = document.querySelector('.nav-item.active')?.id?.replace('nav-','') || 'progress';
+  if (activeTab === 'sessions') renderSessionsTab();
+  else if (activeTab === 'settings') loadSettingsTab();
 }
 
 function renderLogs(logs){
@@ -546,11 +561,11 @@ async function renderSessionsTab() {
     const isToday = ds === new Date().toISOString().split('T')[0];
     const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 1);
     const dayNum = d.getDate();
-    return `<div title="${ds}" style="width:30px;height:38px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:9px;font-weight:600;
+    return `<div title="${ds}" style="width:32px;height:42px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:9px;font-weight:600;
       background:${isToday ? '#0b0f0d' : hasLog ? '#ecfdf5' : '#fafaf9'};
       color:${isToday ? '#fff' : hasLog ? '#047857' : '#9b9892'};
       border:1px solid ${isToday ? 'transparent' : hasLog ? '#6ee7b7' : '#eceae5'}">
-      <span>${dayName}</span><span>${dayNum}</span>
+      <span style="font-size:8px;opacity:0.7">${dayName}</span><span>${dayNum}</span>
     </div>`;
   }).join('');
 
