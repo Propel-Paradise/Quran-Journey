@@ -210,18 +210,31 @@
 
     <!-- SESSIONS TAB -->
     <div id="tab-sessions" style="display:none;flex:1;overflow:auto;padding:20px 24px">
-      <div class="section-header">
-        <div class="section-title">All Sessions</div>
-        <span id="sessions-count" style="font-size:12px;color:#737773"></span>
-      </div>
       <div id="sessions-no-student" class="empty-state" style="display:none">
         <div class="big">📚</div>Select a child from the sidebar to view their sessions.
       </div>
-      <div class="table-wrap" id="sessions-table-wrap" style="display:none">
-        <div class="table-head" style="grid-template-columns:1.2fr 1fr 1fr 1fr 1fr">
-          <div>Date</div><div>Sabaq</div><div>Sabqi</div><div>Manzil</div><div>Behavior</div>
+      <div id="sessions-content" style="display:none">
+        <!-- Summary cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px" id="sessions-summary-cards"></div>
+        <!-- Streak calendar -->
+        <div class="table-wrap" style="margin-bottom:20px">
+          <div style="padding:14px 18px;border-bottom:1px solid #eceae5;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:600">30-day attendance</span>
+            <span style="font-size:12px;color:#737773" id="streak-label"></span>
+          </div>
+          <div style="padding:16px 18px;display:flex;flex-wrap:wrap;gap:4px" id="calendar-strip"></div>
         </div>
-        <div id="sessions-list"><div class="loading">Loading…</div></div>
+        <!-- Full log table -->
+        <div class="table-wrap">
+          <div style="padding:13px 18px;border-bottom:1px solid #eceae5;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:600">All sessions</span>
+            <span style="font-size:12px;color:#737773" id="sessions-count"></span>
+          </div>
+          <div class="table-head" style="grid-template-columns:1.2fr 1fr 1fr 1fr 1fr">
+            <div>Date</div><div>Sabaq</div><div>Sabqi</div><div>Manzil</div><div>Behavior</div>
+          </div>
+          <div id="sessions-list"><div class="loading">Loading…</div></div>
+        </div>
       </div>
     </div>
 
@@ -485,28 +498,77 @@ function switchTab(tab, btn) {
 
 async function renderSessionsTab() {
   const noStu = document.getElementById('sessions-no-student');
-  const wrap = document.getElementById('sessions-table-wrap');
-  const list = document.getElementById('sessions-list');
-  const count = document.getElementById('sessions-count');
-  if (!activeStudent) { noStu.style.display = 'block'; wrap.style.display = 'none'; return; }
-  noStu.style.display = 'none'; wrap.style.display = 'block';
-  list.innerHTML = '<div class="loading">Loading…</div>';
+  const content = document.getElementById('sessions-content');
+  if (!activeStudent) { noStu.style.display = 'block'; content.style.display = 'none'; return; }
+  noStu.style.display = 'none'; content.style.display = 'block';
+  document.getElementById('sessions-list').innerHTML = '<div class="loading">Loading…</div>';
+
   const { data: logs } = await db.from('progress_logs').select('*').eq('student_id', activeStudent.id).order('date', { ascending: false });
   const allLogs = logs || [];
-  count.textContent = activeStudent.name + ' · ' + allLogs.length + ' sessions';
-  if (allLogs.length === 0) { list.innerHTML = '<div class="empty-state"><div class="big">📝</div>No sessions logged yet.</div>'; return; }
-  list.innerHTML = allLogs.map(l => {
-    const dateStr = new Date(l.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+
+  // ── Summary cards ──────────────────────────────────────────────
+  const totalSessions = allLogs.length;
+  const totalLines = allLogs.reduce((s, l) => s + (l.sabaq_lines || 0), 0);
+  const avgLines = totalSessions > 0 ? (totalLines / totalSessions).toFixed(1) : '—';
+  const thisMonth = allLogs.filter(l => {
+    const d = new Date(l.date); const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+  const excellentCount = allLogs.filter(l => l.sabaq_quality === 'Excellent').length;
+  const excellentPct = totalSessions > 0 ? Math.round((excellentCount / totalSessions) * 100) : 0;
+
+  document.getElementById('sessions-summary-cards').innerHTML = [
+    { label: 'Total Sessions', val: totalSessions, sub: 'all time' },
+    { label: 'This Month', val: thisMonth, sub: 'sessions logged' },
+    { label: 'Avg Lines / Session', val: avgLines, sub: 'sabaq lines' },
+    { label: 'Excellent Sabaq', val: excellentPct + '%', sub: 'of all sessions' },
+  ].map(c => `
+    <div style="background:#fff;border:1px solid #eceae5;border-radius:10px;padding:16px 18px">
+      <div style="font-size:11px;color:#737773;text-transform:uppercase;letter-spacing:0.3px;font-weight:500">${c.label}</div>
+      <div style="font-size:26px;font-weight:600;letter-spacing:-0.5px;margin-top:6px">${c.val}</div>
+      <div style="font-size:11px;color:#737773;margin-top:3px">${c.sub}</div>
+    </div>`).join('');
+
+  // ── 30-day calendar ─────────────────────────────────────────────
+  const days = []; for (let i = 29; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); days.push(d); }
+  const logDates = new Set(allLogs.map(l => l.date));
+  // Current streak
+  let streak = 0;
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const ds = d.toISOString().split('T')[0];
+    if (logDates.has(ds)) streak++; else break;
+  }
+  document.getElementById('streak-label').textContent = streak > 0 ? `🔥 ${streak}-day streak` : 'No current streak';
+  document.getElementById('calendar-strip').innerHTML = days.map(d => {
+    const ds = d.toISOString().split('T')[0];
+    const hasLog = logDates.has(ds);
+    const isToday = ds === new Date().toISOString().split('T')[0];
+    const dayName = d.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 1);
+    const dayNum = d.getDate();
+    return `<div title="${ds}" style="width:30px;height:38px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:9px;font-weight:600;
+      background:${isToday ? '#0b0f0d' : hasLog ? '#ecfdf5' : '#fafaf9'};
+      color:${isToday ? '#fff' : hasLog ? '#047857' : '#9b9892'};
+      border:1px solid ${isToday ? 'transparent' : hasLog ? '#6ee7b7' : '#eceae5'}">
+      <span>${dayName}</span><span>${dayNum}</span>
+    </div>`;
+  }).join('');
+
+  // ── Full table ───────────────────────────────────────────────────
+  document.getElementById('sessions-count').textContent = totalSessions + ' sessions total';
+  if (allLogs.length === 0) { document.getElementById('sessions-list').innerHTML = '<div class="empty-state"><div class="big">📝</div>No sessions logged yet.</div>'; return; }
+  document.getElementById('sessions-list').innerHTML = allLogs.map(l => {
+    const dateStr = new Date(l.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const sabaqStr = l.sabaq_lines ? l.sabaq_lines + ' lines' : '—';
     const sabqiStr = [l.sabqi_juz ? 'Juz ' + l.sabqi_juz : null, l.sabqi_pages ? l.sabqi_pages + 'p' : null].filter(Boolean).join(' · ') || '—';
     const manzilStr = [l.manzil_pages != null ? l.manzil_pages + (l.manzil_fraction ? ' ' + l.manzil_fraction : '') + ' Juz' : (l.manzil_fraction ? l.manzil_fraction + ' Juz' : null), l.manzil_juz].filter(Boolean).join(' · ') || '—';
-    return '<div class="table-row" style="grid-template-columns:1.2fr 1fr 1fr 1fr 1fr">' +
-      '<div style="font-size:11px;font-family:var(--mono, monospace);color:#737773">' + dateStr + '</div>' +
-      '<div style="font-size:12px">' + sabaqStr + ' ' + qpill(l.sabaq_quality) + '</div>' +
-      '<div style="font-size:12px">' + sabqiStr + ' ' + qpill(l.sabqi_quality) + '</div>' +
-      '<div style="font-size:12px">' + manzilStr + ' ' + qpill(l.manzil_quality) + '</div>' +
-      '<div style="font-size:12px">' + (l.behavior ? qpill(l.behavior) : '—') + '</div>' +
-    '</div>';
+    return `<div class="table-row" style="grid-template-columns:1.2fr 1fr 1fr 1fr 1fr">
+      <div style="font-size:11px;font-family:'IBM Plex Mono',monospace;color:#737773">${dateStr}</div>
+      <div style="font-size:12px">${sabaqStr} ${qpill(l.sabaq_quality)}</div>
+      <div style="font-size:12px">${sabqiStr} ${qpill(l.sabqi_quality)}</div>
+      <div style="font-size:12px">${manzilStr} ${qpill(l.manzil_quality)}</div>
+      <div style="font-size:12px">${l.behavior ? qpill(l.behavior) : '—'}</div>
+    </div>`;
   }).join('');
 }
 
