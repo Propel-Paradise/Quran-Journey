@@ -330,11 +330,17 @@
     // Already logged in — redirect
     db.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        db.from('users').select('role').eq('email', session.user.email).single()
-          .then(({ data }) => {
-            const base = window.location.href.replace('index.html', '').replace(/\/$/, '');
-            if (data?.role === 'teacher') window.location.href = base + '/school.html';
-            else if (data?.role === 'parent') window.location.href = base + '/parent.html';
+        db.from('users').select('role, is_active').eq('email', session.user.email).single()
+          .then(async ({ data }) => {
+            const base = 'https://propel-paradise.github.io/Quran-Journey';
+            if (data?.role === 'teacher' && data?.is_active !== false) {
+              window.location.href = base + '/school.html';
+            } else if (data?.role === 'parent' && data?.is_active !== false) {
+              window.location.href = base + '/parent.html';
+            } else {
+              // No valid role or inactive — sign out and stay on login page
+              await db.auth.signOut();
+            }
           });
       }
     });
