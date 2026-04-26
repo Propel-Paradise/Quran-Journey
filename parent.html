@@ -358,7 +358,7 @@ async function selectStudent(id){
     if(dot)dot.style.display=s.id===id?'block':'none';
   });
 
-  // Only show student-content if we're on the progress tab
+  // Only show student-content if on progress tab
   const activeTab = ['sessions','settings'].find(t => document.getElementById('nav-'+t)?.classList.contains('active')) || 'progress';
   document.getElementById('no-student').style.display = 'none';
   if (activeTab === 'progress') {
@@ -425,10 +425,10 @@ async function selectStudent(id){
 
   renderLogs(allLogs);
 
-  // If sessions tab is active, refresh it too
-  const activeTab = ['sessions','settings'].find(t => document.getElementById('nav-'+t)?.classList.contains('active')) || 'progress';
-  if (activeTab === 'sessions') renderSessionsTab();
-  else if (activeTab === 'settings') loadSettingsTab();
+  // If sessions/settings tab is active, refresh it
+  const activeTab2 = ['sessions','settings'].find(t => document.getElementById('nav-'+t)?.classList.contains('active')) || 'progress';
+  if (activeTab2 === 'sessions') renderSessionsTab();
+  else if (activeTab2 === 'settings') loadSettingsTab();
 }
 
 function renderLogs(logs){
