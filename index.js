@@ -1,4 +1,4 @@
-    const SUPABASE_URL = 'https://fdibhjmbabdcphldnvmq.supabase.co';
+const SUPABASE_URL = 'https://fdibhjmbabdcphldnvmq.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -159,10 +159,22 @@
             } else if (data?.role === 'admin') {
               window.location.href = base + '/admin.html';
             } else {
+              // No matching user row (e.g. deleted account) — sign out silently
               await db.auth.signOut();
+              document.body.style.display = 'block';
             }
           });
+      } else {
+        document.body.style.display = 'block';
       }
     });
 
     document.addEventListener('keydown', e => { if (e.key === 'Enter') signIn(); });
+
+
+// Register service worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/Quran-Journey/sw.js').catch(() => {});
+  });
+}
