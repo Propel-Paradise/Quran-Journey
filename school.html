@@ -467,6 +467,8 @@ const BASE='https://propel-paradise.github.io/Quran-Journey';
 
 let currentUser=null,students=[],logs=[],parents=[],generatedPassword='',manzilFraction=null;
 const qualityState={sabaq:null,sabqi:null,manzil:null,behavior:null};
+function localDateStr(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+const todayStr=()=>localDateStr(new Date());
 
 function icon(name,size,color){size=size||16;color=color||'currentColor';
   const p={students:'<path d="M16 14a4 4 0 1 0-8 0"/><circle cx="12" cy="7" r="3"/>',plus:'<path d="M12 5v14M5 12h14"/>',edit:'<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',logs:'<path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 14h8"/>',};
@@ -514,7 +516,7 @@ async function init(){
   document.getElementById('sidebar-email').textContent=session.user.email;
   document.getElementById('settings-email').textContent=session.user.email;
   document.getElementById('topbar-org').textContent=u.name;
-  const _ld=new Date();document.getElementById('log-date').value=`${_ld.getFullYear()}-${String(_ld.getMonth()+1).padStart(2,'0')}-${String(_ld.getDate()).padStart(2,'0')}`;
+  document.getElementById('log-date').value=todayStr();
   document.getElementById('stat-date').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
   if(u.org_id){
     const{data:org}=await db.from('organizations').select('*').eq('id',u.org_id).single();
@@ -646,11 +648,11 @@ function toggleGroup(id){const el=document.getElementById(id);const idx=id.repla
 
 function updateStats(){
   document.getElementById('stat-students').textContent=students.length;
-  const today=new Date().toISOString().split('T')[0];
+  const today=todayStr();
   const todayLogs=logs.filter(l=>l.date===today);
   document.getElementById('stat-logs').textContent=todayLogs.length;
   const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
-  const weekLogs=logs.filter(l=>new Date(l.date)>=weekAgo);
+  const weekLogs=logs.filter(l=>new Date(l.date+'T12:00:00')>=weekAgo);
   const weekLines=weekLogs.reduce((s,l)=>s+(l.sabaq_lines||0),0);
   document.getElementById('stat-avg').textContent=students.length>0?(weekLines/students.length).toFixed(1):'0';
   document.getElementById('stat-week').textContent=weekLogs.length;
