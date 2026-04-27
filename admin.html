@@ -229,7 +229,7 @@
         const statusPill=o.is_active?`<span class="pill pill-active">Active</span>`:`<span class="pill pill-cancelled">Inactive</span>`;
         const actionBtn=o.is_active?`<button class="row-btn row-btn-danger" onclick="openDeactivate(${o.id},'${o.name.replace(/'/g,"\\'")}')">Deactivate</button>`:`<button class="row-btn row-btn-success" onclick="sendReactivate('${o.email.replace(/'/g,"\\'")}')">Send Link</button>`;
         return `<div class="table-row" style="grid-template-columns:2fr 2fr 1fr 1fr 1fr 120px">
-          <div style="font-weight:500;color:#fff">${o.name}</div>
+          <div style="font-weight:500;color:#0f1411">${o.name}</div>
           <div style="font-size:12px;color:#9aa19d;font-family:'IBM Plex Mono',monospace">${o.email}</div>
           <div>${planPill}</div><div>${statusPill}</div>
           <div style="font-size:11px;color:#6b716d">${created}</div>
