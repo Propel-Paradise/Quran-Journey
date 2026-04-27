@@ -70,46 +70,6 @@ async function init(){
     }
   }
   await loadParents();await loadStudents();await loadLogs();await loadInviteCode();
-  showOnboardingIfNeeded();
-}
-
-function showOnboardingIfNeeded(){
-  const dismissed=localStorage.getItem('qj_onboarding_dismissed_'+currentUser.org_id);
-  if(dismissed)return;
-  const steps=[
-    {done:students.length>0, label:'Add your first student', action:"closeOnboarding();document.getElementById('nav-students').click();setTimeout(()=>document.getElementById('add-student-modal').style.display='flex',100);"},
-    {done:parents.length>0, label:'Share your invite code with parents', action:"closeOnboarding();switchTab('settings');"},
-    {done:logs.length>0, label:'Log your first session', action:"closeOnboarding();document.getElementById('open-log-btn').click();"},
-  ];
-  const allDone=steps.every(s=>s.done);
-  if(allDone){localStorage.setItem('qj_onboarding_dismissed_'+currentUser.org_id,'1');return;}
-  const el=document.getElementById('onboarding-checklist');
-  if(!el)return;
-  el.innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:600;color:#0f1411">Get started</div>
-      <button onclick="closeOnboarding()" style="background:none;border:none;cursor:pointer;color:#737773;font-size:18px;line-height:1;padding:0">&times;</button>
-    </div>
-    <div style="font-size:12px;color:#737773;margin-bottom:14px">${steps.filter(s=>s.done).length} of ${steps.length} complete</div>
-    <div style="width:100%;height:4px;background:#eceae5;border-radius:2px;margin-bottom:16px">
-      <div style="width:${Math.round(steps.filter(s=>s.done).length/steps.length*100)}%;height:4px;background:#10b981;border-radius:2px;transition:width 0.3s"></div>
-    </div>
-    ${steps.map((s,i)=>`
-      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;${i<steps.length-1?'border-bottom:1px solid #f0ede8;':''}">
-        <div style="width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;${s.done?'background:#10b981':'background:#eceae5'}">
-          ${s.done?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>':'<div style="width:6px;height:6px;border-radius:50%;background:#9b9892"></div>'}
-        </div>
-        <span style="font-size:12px;color:${s.done?'#9b9892':'#0f1411'};${s.done?'text-decoration:line-through;':''}">${s.label}</span>
-        ${!s.done?`<button onclick="${s.action}" style="margin-left:auto;font-size:11px;color:#10b981;background:none;border:none;cursor:pointer;font-weight:600;white-space:nowrap">Do it →</button>`:''}
-      </div>`).join('')}
-  `;
-  el.style.display='block';
-}
-
-function closeOnboarding(){
-  const el=document.getElementById('onboarding-checklist');
-  if(el)el.style.display='none';
-  if(currentUser?.org_id)localStorage.setItem('qj_onboarding_dismissed_'+currentUser.org_id,'1');
 }
 
 async function loadParents(){
