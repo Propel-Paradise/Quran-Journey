@@ -37,7 +37,7 @@ async function init(){
 const childColors=['#f59e0b','#0ea5e9','#10b981','#8b5cf6','#ef4444'];
 
 async function loadStudents(){
-  const{data}=await db.from('students').select('*').eq('parent_email',currentUser.email).order('name');
+  const{data}=await db.from('students').select('*').contains('parent_emails',[currentUser.email]).order('name');
   students=data||[];
   const cl=document.getElementById('child-list');
   if(students.length===0){
@@ -316,7 +316,10 @@ async function loadSettingsTab() {
 
 async function removeChild(id, name) {
   if (!confirm('Remove ' + name + ' from your account? Their progress records stay with the school.')) return;
-  await db.from('students').update({ parent_email: null }).eq('id', id).eq('parent_email', currentUser.email);
+  const s = students.find(st => st.id === id);
+  if (!s) return;
+  const updated = (s.parent_emails || []).filter(e => e !== currentUser.email);
+  await db.from('students').update({ parent_emails: updated }).eq('id', id);
   students = students.filter(s => s.id !== id);
   await loadStudents();
   loadSettingsTab();
@@ -331,8 +334,12 @@ async function deleteAccount() {
   const btn = document.getElementById('da-btn');
   if (val !== 'DELETE') { errEl.textContent = 'Please type DELETE to confirm.'; errEl.style.display = 'block'; return; }
   btn.disabled = true; btn.textContent = 'Deleting…';
-  // Unlink students
-  await db.from('students').update({ parent_email: null }).eq('parent_email', currentUser.email);
+  // Unlink this parent from all students
+  const linked = students.filter(s => (s.parent_emails || []).includes(currentUser.email));
+  for (const s of linked) {
+    const updated = (s.parent_emails || []).filter(e => e !== currentUser.email);
+    await db.from('students').update({ parent_emails: updated }).eq('id', s.id);
+  }
   // Delete user record
   await db.from('users').delete().eq('email', currentUser.email);
   // Sign out
