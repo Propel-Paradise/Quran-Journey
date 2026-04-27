@@ -56,6 +56,13 @@
     .success-screen h2{font-size:22px;}
     .success-screen p{font-size:13px;color:#9aa19d;margin-bottom:24px;margin-top:6px;}
   </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f0d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Quran Journey">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
 </head>
 <body>
   <div style="width:100%;max-width:520px">
@@ -136,7 +143,24 @@
     let stripe,cardElement,orgData={};
     function setStep(n){[1,2,3,4].forEach(i=>{document.getElementById(`step${i}`).style.display=i===n?'block':'none';const sn=document.getElementById(`sn${i}`),sl=document.getElementById(`sl${i}`);sn.className='step-num'+(i<n?' done':i===n?' active':'');sn.textContent=i<n?'✓':String(i);sl.className='step-label'+(i===n?' active':'');});if(n===2)setTimeout(initStripe,100);}
     function initStripe(){stripe=Stripe(STRIPE_KEY);const els=stripe.elements();cardElement=els.create('card',{style:{base:{fontFamily:"'IBM Plex Sans',sans-serif",fontSize:'13px',color:'#e7e5e0','::placeholder':{color:'#4a5050'}},invalid:{color:'#f87171'}}});cardElement.mount('#card-element');cardElement.on('change',e=>{document.getElementById('card-errors').textContent=e.error?e.error.message:'';});}
-    function goStep2(){const e=document.getElementById('s1err'),n=document.getElementById('org-name').value.trim(),em=document.getElementById('org-email').value.trim();if(!n){e.textContent='Please enter your organization name.';e.style.display='block';return;}if(!em||!em.includes('@')){e.textContent='Please enter a valid email.';e.style.display='block';return;}orgData={name:n,email:em,city:document.getElementById('org-city').value.trim(),state:document.getElementById('org-state').value};sessionStorage.setItem('pendingOrg',JSON.stringify(orgData));e.style.display='none';setStep(2);}
+    async function goStep2(){
+      const e=document.getElementById('s1err'),n=document.getElementById('org-name').value.trim(),em=document.getElementById('org-email').value.trim().toLowerCase();
+      if(!n){e.textContent='Please enter your organization name.';e.style.display='block';return;}
+      if(!em||!em.includes('@')){e.textContent='Please enter a valid email.';e.style.display='block';return;}
+      // Check if org already exists with this email
+      const{data:existingOrg}=await db.from('organizations').select('id,is_active,plan').eq('email',em).single();
+      if(existingOrg){
+        if(!existingOrg.is_active){
+          // Deactivated org — redirect to reactivate
+          window.location.href=BASE+'/reactivate.html?email='+encodeURIComponent(em);
+          return;
+        } else {
+          e.textContent='An account with this email already exists. Please sign in instead.';e.style.display='block';return;
+        }
+      }
+      orgData={name:n,email:em,city:document.getElementById('org-city').value.trim(),state:document.getElementById('org-state').value};
+      sessionStorage.setItem('pendingOrg',JSON.stringify(orgData));e.style.display='none';setStep(2);
+    }
     async function startCheckout(){
       const e=document.getElementById('s2err'),btn=document.getElementById('s2btn'),cn=document.getElementById('card-name').value.trim();
       if(!cn){e.textContent='Please enter the cardholder name.';e.style.display='block';return;}
