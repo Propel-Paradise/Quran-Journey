@@ -36,6 +36,7 @@
     .profile-avatar{width:30px;height:30px;border-radius:8px;background:#1f2622;color:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid #2a322d;flex-shrink:0;}
 
     .workspace{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
+    #student-content{flex:1;overflow:auto;display:flex;flex-direction:column;}
     .topbar{display:flex;align-items:center;gap:14px;padding:11px 24px;border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
     .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#737773;}
     .breadcrumb .active{font-size:13px;font-weight:600;color:#0f1411;}
@@ -166,7 +167,7 @@
       <div>Choose your child's name from the sidebar to view their Quran progress.</div>
     </div>
 
-    <div id="student-content" style="display:none">
+    <div id="student-content" style="display:none;flex:1;overflow:auto;">
       <div class="hero">
         <div class="hero-avatar" id="hero-avatar">—</div>
         <div>
@@ -247,7 +248,7 @@
       </div>
       <div class="settings-card">
         <h3>Linked Children</h3>
-        <p class="desc">These students are linked to your account. Removing a child only unlinks them — their progress data stays intact.</p>
+        <p class="desc">These students are linked to your account.</p>
         <div id="settings-children-list" style="margin-bottom:14px;font-size:13px;color:#737773">Loading…</div>
       </div>
       <div class="settings-card danger">
@@ -358,7 +359,7 @@ async function selectStudent(id){
     if(dot)dot.style.display=s.id===id?'block':'none';
   });
 
-  // Only show student-content if on progress tab
+  // Only show student-content if we're on the progress tab
   const activeTab = ['sessions','settings'].find(t => document.getElementById('nav-'+t)?.classList.contains('active')) || 'progress';
   document.getElementById('no-student').style.display = 'none';
   if (activeTab === 'progress') {
@@ -387,7 +388,7 @@ async function selectStudent(id){
 
   if(allLogs.length>0){
     const last=allLogs[0];
-    const lastDate=new Date(last.date+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const lastDate=new Date(last.date).toLocaleDateString('en-US',{month:'short',day:'numeric'});
     document.getElementById('stat-last').textContent=lastDate;
     document.getElementById('stat-last-sub').textContent=last.sabaq_lines?`${last.sabaq_lines} lines sabaq`:'Session logged';
     document.getElementById('last-updated').textContent=`Last updated ${lastDate}`;
@@ -397,7 +398,7 @@ async function selectStudent(id){
 
   // Behavior this week
   const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
-  const weekBehavior=allLogs.filter(l=>new Date(l.date+'T12:00:00')>=weekAgo&&l.behavior).map(l=>l.behavior);
+  const weekBehavior=allLogs.filter(l=>new Date(l.date)>=weekAgo&&l.behavior).map(l=>l.behavior);
   const behaviorEl=document.getElementById('stat-behavior');
   if(weekBehavior.length>0){
     const sm={Excellent:3,Good:2,'Needs Work':1};
@@ -425,17 +426,17 @@ async function selectStudent(id){
 
   renderLogs(allLogs);
 
-  // If sessions/settings tab is active, refresh it
-  const activeTab2 = ['sessions','settings'].find(t => document.getElementById('nav-'+t)?.classList.contains('active')) || 'progress';
-  if (activeTab2 === 'sessions') renderSessionsTab();
-  else if (activeTab2 === 'settings') loadSettingsTab();
+  // If sessions tab is active, refresh it too
+  const activeTab = ['sessions','settings'].find(t => document.getElementById('nav-'+t)?.classList.contains('active')) || 'progress';
+  if (activeTab === 'sessions') renderSessionsTab();
+  else if (activeTab === 'settings') loadSettingsTab();
 }
 
 function renderLogs(logs){
   const el=document.getElementById('logs-list');
   if(logs.length===0){el.innerHTML=`<div class="empty-state"><div class="big">📝</div>No progress logged yet. Check back after the next session.</div>`;return;}
   el.innerHTML=logs.map(l=>{
-    const dateStr=new Date(l.date+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    const dateStr=new Date(l.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
     const sabaqFailed=l.sabaq_failed||l.sabaq_quality==='Failed';
     const sabqiFailed=l.sabqi_failed||l.sabqi_quality==='Failed';
     const manzilFailed=l.manzil_failed||l.manzil_quality==='Failed';
@@ -540,7 +541,7 @@ async function renderSessionsTab() {
     { label: 'Total Sessions', val: totalSessions, sub: 'all time' },
     { label: 'This Month', val: thisMonth, sub: 'sessions logged' },
     { label: 'Avg Lines / Session', val: avgLines, sub: 'sabaq lines' },
-    { label: 'Excellent Sabaq', val: excellentPct + '%', sub: 'of all sessions' },
+    { label: 'Sabaq Quality', val: excellentPct + '%', sub: 'excellent sessions' },
   ].map(c => `
     <div style="background:#fff;border:1px solid #eceae5;border-radius:10px;padding:16px 18px">
       <div style="font-size:11px;color:#737773;text-transform:uppercase;letter-spacing:0.3px;font-weight:500">${c.label}</div>
@@ -577,7 +578,7 @@ async function renderSessionsTab() {
   document.getElementById('sessions-count').textContent = totalSessions + ' sessions total';
   if (allLogs.length === 0) { document.getElementById('sessions-list').innerHTML = '<div class="empty-state"><div class="big">📝</div>No sessions logged yet.</div>'; return; }
   document.getElementById('sessions-list').innerHTML = allLogs.map(l => {
-    const dateStr = new Date(l.date+'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const dateStr = new Date(l.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const sabaqStr = l.sabaq_lines ? l.sabaq_lines + ' lines' : '—';
     const sabqiStr = [l.sabqi_juz ? 'Juz ' + l.sabqi_juz : null, l.sabqi_pages ? l.sabqi_pages + 'p' : null].filter(Boolean).join(' · ') || '—';
     const manzilStr = [l.manzil_pages != null ? l.manzil_pages + (l.manzil_fraction ? ' ' + l.manzil_fraction : '') + ' Juz' : (l.manzil_fraction ? l.manzil_fraction + ' Juz' : null), l.manzil_juz].filter(Boolean).join(' · ') || '—';
@@ -599,7 +600,7 @@ async function loadSettingsTab() {
   list.innerHTML = students.map(s => `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eceae5">
       <div style="font-weight:500">${s.name}</div>
-      <button class="btn-danger" style="font-size:11px;padding:4px 10px" onclick="removeChild(${s.id},'${s.name.replace(/'/g,"\'")}')">Remove</button>
+
     </div>`).join('');
 }
 
