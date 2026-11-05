@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — Parent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:#fafaf9;color:#0f1411;overflow:hidden;}
+    .page{display:flex;height:100vh;}
+
+    .sidebar{width:248px;background:#0b0f0d;color:#e7e5e0;display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+    .brand-row{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #1c211e;flex-shrink:0;}
+    .logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;}
+    .brand-name{font-size:13px;font-weight:600;color:#fff;}
+    .brand-sub{font-size:11px;color:#9aa19d;}
+
+    .child-switcher{margin:12px 12px 4px;padding:10px 12px;border-radius:8px;background:#141a17;border:1px solid #1f2622;flex-shrink:0;}
+    .child-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.4px;font-weight:600;margin-bottom:6px;}
+    .child-row{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;transition:opacity 0.15s;}
+    .child-row:hover{opacity:1!important;}
+    .child-avatar{width:24px;height:24px;border-radius:6px;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;}
+    .child-name{font-size:12.5px;font-weight:500;color:#fff;}
+    .child-meta{font-size:10.5px;color:#9aa19d;}
+
+    .section-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;padding:14px 20px 5px;flex-shrink:0;}
+    .nav-list{display:flex;flex-direction:column;padding:0 8px;gap:1px;}
+    .nav-item{display:flex;align-items:center;gap:11px;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:500;color:#b0b6b1;border-left:2px solid transparent;cursor:pointer;transition:all 0.1s;}
+    .nav-item:hover{color:#fff;background:#141a17;}
+    .nav-item.active{color:#fff;background:#1c2421;border-left-color:#f59e0b;padding-left:10px;}
+    .nav-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:4px;background:#f59e0b22;color:#fbbf24;font-weight:600;}
+
+    .sidebar-foot{margin-top:auto;padding:12px;border-top:1px solid #1c211e;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+    .profile-avatar{width:30px;height:30px;border-radius:8px;background:#1f2622;color:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid #2a322d;flex-shrink:0;}
+
+    .workspace{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
+    #student-content{flex:1;overflow:auto;display:flex;flex-direction:column;}
+    #student-content{flex:1;overflow:auto;display:flex;flex-direction:column;}
+    .topbar{display:flex;align-items:center;gap:14px;padding:11px 24px;border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#737773;}
+    .breadcrumb .active{font-size:13px;font-weight:600;color:#0f1411;}
+    .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+    .change-pw-btn{font-size:11px;color:#737773;background:none;border:1px solid #e3e0da;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;}
+    .change-pw-btn:hover{background:#f4f3ef;}
+
+    .hero{background:#fff;border-bottom:1px solid #eceae5;padding:18px 24px;display:flex;align-items:center;gap:16px;flex-shrink:0;}
+    .hero-avatar{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;flex-shrink:0;}
+    .hero-name{font-size:20px;font-weight:600;letter-spacing:-0.5px;}
+    .hero-sub{font-size:12px;color:#737773;margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+    .week-strip{display:flex;gap:5px;margin-left:auto;}
+    .day-pill{width:36px;height:40px;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;font-weight:600;gap:1px;flex-shrink:0;}
+
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
+    .stat-cell{padding:16px 20px;border-right:1px solid #eceae5;}
+    .stat-cell:last-child{border-right:none;}
+    .stat-label{font-size:11px;color:#737773;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
+    .stat-value{font-size:24px;font-weight:600;letter-spacing:-0.5px;margin-top:6px;}
+    .stat-sub{font-size:11px;color:#737773;margin-top:3px;}
+
+    .content{flex:1;overflow:auto;padding:20px 24px;}
+
+    .card{background:#fff;border:1px solid #eceae5;border-radius:10px;overflow:hidden;margin-bottom:20px;}
+    .card-head{padding:13px 18px;border-bottom:1px solid #eceae5;display:flex;align-items:center;justify-content:space-between;}
+    .card-title{font-size:13px;font-weight:600;}
+
+    .log-block{padding:16px 18px;border-bottom:1px solid #eceae5;}
+    .log-block:last-child{border-bottom:none;}
+    .log-date{font-size:13px;font-weight:500;margin-bottom:10px;}
+    .log-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px;}
+    .log-section{background:#fafaf9;border:1px solid #eceae5;border-radius:6px;padding:8px 10px;}
+    .log-section-failed{background:#fef2f2!important;border-color:#fecaca!important;}
+    .log-section-title{font-size:10px;color:#737773;text-transform:uppercase;letter-spacing:0.4px;font-weight:600;margin-bottom:4px;}
+    .log-section-val{font-size:12px;font-weight:500;}
+    .log-notes{background:#fffbeb;border:1px solid #fef3c7;border-radius:6px;padding:8px 10px;font-size:12px;color:#3a3f3c;line-height:1.5;}
+    .log-notes-label{font-size:10px;color:#b45309;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;display:block;margin-bottom:3px;}
+
+    .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:500;}
+    .pill-success{background:#ecfdf5;color:#047857;}
+    .pill-warn{background:#fffbeb;color:#b45309;}
+    .pill-danger{background:#fef2f2;color:#b91c1c;}
+
+    .empty-state{padding:40px;text-align:center;color:#737773;font-size:13px;}
+    .empty-state .big{font-size:36px;margin-bottom:10px;}
+    .no-student{padding:80px 24px;text-align:center;color:#737773;}
+    .no-student .big{font-size:44px;margin-bottom:12px;}
+    .no-student .title{font-size:16px;font-weight:600;color:#0f1411;margin-bottom:6px;}
+    .loading{padding:40px;text-align:center;color:#737773;font-size:13px;}
+
+    /* CP Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(11,15,13,0.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(2px);}
+    .modal{background:#fff;border-radius:10px;padding:28px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,0.2);}
+    .modal h2{font-size:17px;font-weight:600;margin-bottom:4px;}
+    .modal .sub{font-size:12px;color:#737773;margin-bottom:20px;}
+    .field{margin-bottom:14px;}
+    .field label{display:block;font-size:10.5px;color:#737773;letter-spacing:0.4px;text-transform:uppercase;font-weight:500;margin-bottom:6px;}
+    .field input{width:100%;padding:9px 12px;border-radius:7px;border:1px solid #e3e0da;background:#fff;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s;color:#0f1411;}
+    .field input:focus{border-color:#f59e0b;}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+    .btn-primary{padding:8px 16px;border-radius:7px;font-size:12px;font-weight:500;background:#0b0f0d;color:#fff;border:none;cursor:pointer;}
+    .btn-secondary{padding:8px 16px;border-radius:7px;font-size:12px;font-weight:500;background:#fff;color:#3a3f3c;border:1px solid #e3e0da;cursor:pointer;}
+    .error-box{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .success-box{background:#ecfdf5;border:1px solid #6ee7b7;color:#047857;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+  </style>
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f0d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Quran Journey">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+<div class="page">
+  <div class="nav-scrim" onclick="toggleNav(false)"></div>
+
+  <aside class="sidebar">
+    <div class="brand-row">
+      <div class="logo-mark">Q</div>
+      <div style="line-height:1.2">
+        <div class="brand-name">Quran Journey</div>
+        <div class="brand-sub">Parent portal</div>
+      </div>
+    </div>
+
+    <div class="child-switcher">
+      <div class="child-label">Your children</div>
+      <div id="child-list">
+        <div style="font-size:11px;color:#6b716d">Loading…</div>
+      </div>
+    </div>
+
+    <div class="section-label">View</div>
+    <nav class="nav-list">
+      <div class="nav-item active" id="nav-progress" onclick="switchTab('progress',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>Progress</span>
+      </div>
+      <div class="nav-item" id="nav-sessions" onclick="switchTab('sessions',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>
+        <span>Sessions</span>
+      </div>
+      <div class="nav-item" id="nav-settings" onclick="switchTab('settings',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="profile-avatar" id="parent-avatar">P</div>
+      <div style="flex:1;min-width:0;line-height:1.2">
+        <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="parent-name-display">Parent</div>
+        <div style="font-size:11px;color:#9aa19d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="parent-email-display">—</div>
+      </div>
+      <button onclick="signOut()" style="background:none;border:none;cursor:pointer;padding:4px;color:#9aa19d;display:flex;align-items:center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <div class="workspace">
+    <div class="topbar">
+      <button class="menu-btn" aria-label="Menu" onclick="toggleNav()">☰</button>
+      <div class="breadcrumb">
+        <span id="topbar-child">Student</span>
+        <span style="color:#d4d0ca">/</span>
+        <span class="active" id="topbar-page">Progress</span>
+      </div>
+      <div class="topbar-right"></div>
+    </div>
+
+    <div id="no-student" class="no-student">
+      <div class="big">📖</div>
+      <div class="title">Select a student</div>
+      <div>Choose your child's name from the sidebar to view their Quran progress.</div>
+    </div>
+
+    <div id="student-content" style="display:none;flex:1;overflow:auto;">
+      <div class="hero">
+        <div class="hero-avatar" id="hero-avatar">—</div>
+        <div>
+          <div class="hero-name" id="hero-name">—</div>
+          <div class="hero-sub">
+            <span id="hero-school">—</span>
+            <span id="hero-behavior-pill"></span>
+          </div>
+        </div>
+        <div class="week-strip" id="week-strip"></div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-cell">
+          <div class="stat-label">Total Sessions</div>
+          <div class="stat-value" id="stat-sessions">—</div>
+          <div class="stat-sub">logged</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Last Session</div>
+          <div class="stat-value" id="stat-last" style="font-size:16px;margin-top:8px">—</div>
+          <div class="stat-sub" id="stat-last-sub">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Behavior This Week</div>
+          <div class="stat-value" id="stat-behavior" style="font-size:16px;margin-top:8px">—</div>
+          <div class="stat-sub">last 7 days</div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="card">
+          <div class="card-head">
+            <span class="card-title">Recent Sessions</span>
+            <span id="last-updated" style="font-size:11px;color:#737773"></span>
+          </div>
+          <div id="logs-list"><div class="loading">Loading…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SESSIONS TAB -->
+    <div id="tab-sessions" style="display:none;flex:1;overflow:auto;padding:20px 24px">
+      <div id="sessions-no-student" class="empty-state" style="display:none">
+        <div class="big">📚</div>Select a child from the sidebar to view their sessions.
+      </div>
+      <div id="sessions-content" style="display:none">
+        <!-- Summary cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px" id="sessions-summary-cards"></div>
+        <!-- Streak calendar -->
+        <div class="table-wrap" style="margin-bottom:20px">
+          <div style="padding:14px 18px;border-bottom:1px solid #eceae5;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:600">30-day attendance</span>
+            <span style="font-size:12px;color:#737773" id="streak-label"></span>
+          </div>
+          <div style="padding:16px 18px;display:flex;flex-wrap:wrap;gap:4px" id="calendar-strip"></div>
+        </div>
+        <!-- Full log table -->
+        <div class="table-wrap">
+          <div style="padding:13px 18px;border-bottom:1px solid #eceae5;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:13px;font-weight:600">All sessions</span>
+            <span style="font-size:12px;color:#737773" id="sessions-count"></span>
+          </div>
+          <div class="table-head" style="grid-template-columns:1.2fr 1fr 1fr 1fr 1fr">
+            <div>Date</div><div>Sabaq</div><div>Sabqi</div><div>Manzil</div><div>Behavior</div>
+          </div>
+          <div id="sessions-list"><div class="loading">Loading…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" style="display:none;flex:1;overflow:auto;padding:20px 24px">
+      <div style="max-width:560px;display:flex;flex-direction:column">
+        <div class="settings-card">
+          <h3>Account</h3>
+          <p class="desc">Signed in as <span id="settings-email" style="font-weight:500;color:#0f1411"></span></p>
+          <button class="btn-ghost" onclick="openCpModal()">Change Password</button>
+        </div>
+        <div class="settings-card">
+          <h3>Linked Children</h3>
+          <p class="desc">These students are linked to your account.</p>
+          <div id="settings-children-list" style="margin-bottom:14px;font-size:13px;color:#737773">Loading…</div>
+        </div>
+        <div class="settings-card danger">
+          <h3>Delete Account</h3>
+          <p class="desc">Permanently delete your parent account. Your children's progress records will be preserved for the school — only your login access is removed.</p>
+          <button class="btn-danger" onclick="openDeleteAccountModal()">Delete My Account</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-overlay" id="delete-account-modal" style="display:none">
+  <div class="modal">
+    <h2>Delete Account</h2>
+    <p class="sub">This will remove your parent login. Your children's progress data stays with the school.</p>
+    <div id="da-error" class="ws-error" style="display:none"></div>
+    <div class="field"><label>Type DELETE to confirm</label><input type="text" id="da-confirm" placeholder="DELETE" /></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeDeleteAccountModal()">Cancel</button>
+      <button class="btn-danger" id="da-btn" onclick="deleteAccount()">Delete My Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-overlay" id="cp-modal" style="display:none">
+  <div class="modal">
+    <h2>Change Password</h2>
+    <p class="sub">Set a new password for your account.</p>
+    <div id="cp-error" class="error-box" style="display:none"></div>
+    <div id="cp-success" class="success-box" style="display:none"></div>
+    <div class="field"><label>New Password</label><input type="password" id="cp-pw" placeholder="Minimum 8 characters" /></div>
+    <div class="field"><label>Confirm Password</label><input type="password" id="cp-pw2" placeholder="Re-enter password" /></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeCpModal()">Cancel</button>
+      <button class="btn-primary" id="cp-btn" onclick="savePassword()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="parent.js"></script>
+</body>
+</html>

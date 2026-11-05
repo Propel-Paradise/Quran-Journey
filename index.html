@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'IBM Plex Sans', sans-serif; background: #0b0f0d; color: #e7e5e0; }
+
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+
+    .card {
+      width: 100%; max-width: 380px;
+      background: #111814;
+      border: 1px solid #1f2622;
+      border-radius: 12px; padding: 32px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+
+    .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 7px;
+      background: linear-gradient(135deg, #10b981, #047857);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700;
+    }
+    .logo-name { font-size: 15px; font-weight: 600; color: #fff; }
+    .logo-version { margin-left: auto; font-size: 10px; color: #6b716d; font-family: 'IBM Plex Mono', monospace; background: #1c2421; padding: 2px 8px; border-radius: 10px; }
+
+    h1 { font-size: 20px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 4px; color: #fff; }
+    .subtitle { font-size: 12px; color: #9aa19d; margin-bottom: 24px; line-height: 1.5; }
+
+    .role-label { font-size: 10.5px; color: #6b716d; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 500; margin-bottom: 6px; }
+    .role-toggle {
+      display: flex; padding: 3px; border-radius: 8px;
+      background: #0b0f0d; border: 1px solid #1c211e; margin-bottom: 20px;
+    }
+    .role-btn {
+      flex: 1; padding: 7px 0; border-radius: 5px; border: none;
+      font-size: 12px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500;
+      cursor: pointer; transition: all 0.15s;
+      background: transparent; color: #6b716d;
+    }
+    .role-btn.active { background: #1c2421; color: #fff; border: 1px solid #2a322d; }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block; font-size: 10.5px; color: #9aa19d;
+      letter-spacing: 0.4px; text-transform: uppercase; font-weight: 500; margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%; padding: 9px 12px; border-radius: 7px;
+      border: 1px solid #1c211e; background: #141a17;
+      font-size: 13px; font-family: 'IBM Plex Sans', sans-serif;
+      outline: none; transition: border-color 0.15s; color: #e7e5e0;
+    }
+    .field input::placeholder { color: #4a5050; }
+    .field input:focus { border-color: #10b981; }
+
+    .btn-primary {
+      width: 100%; padding: 10px; border-radius: 7px; border: none;
+      background: #10b981; color: #062e22; font-size: 13px;
+      font-family: 'IBM Plex Sans', sans-serif; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s; margin-top: 4px;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error {
+      background: #1f1010; border: 1px solid #3d1515; color: #f87171;
+      border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px;
+    }
+    .success {
+      background: #0a1f18; border: 1px solid #14523f; color: #34d399;
+      border-radius: 7px; padding: 9px 12px; font-size: 12px; margin-bottom: 14px;
+    }
+
+    .footer-links {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 16px;
+    }
+    .footer-links a {
+      font-size: 11.5px; color: #6b716d; text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: #10b981; }
+
+    #forgot-panel { display: none; }
+    #login-panel { display: block; }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f0d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Quran Journey">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row">
+      <div class="logo-mark">Q</div>
+      <div class="logo-name">Quran Journey</div>
+      <div class="logo-version" id="app-version">v1.8</div>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div id="login-panel">
+      <h1>Sign in</h1>
+      <p class="subtitle">Quran progress tracking for schools and families.</p>
+
+      <div id="error" class="error" style="display:none;"></div>
+
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="you@gmail.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" />
+      </div>
+
+      <div class="role-label">I am a</div>
+      <div class="role-toggle">
+        <button class="role-btn active" id="btn-school" onclick="setRole('school')">School</button>
+        <button class="role-btn" id="btn-parent" onclick="setRole('parent')">Parent</button>
+      </div>
+
+      <button class="btn-primary" id="signin-btn" onclick="signIn()">Sign in</button>
+
+      <div class="footer-links">
+        <a href="#" onclick="showForgot(); return false;">Forgot password?</a>
+        <a href="register.html" id="footer-org-link">New organization?</a>
+        <a href="join.html" id="footer-join-link" style="display:none">Join school</a>
+      </div>
+      <div id="cancel-redirect" style="display:none;margin-top:12px;text-align:center">
+        <a href="reactivate.html" style="font-size:12px;color:#10b981;text-decoration:none;font-weight:500">→ Reactivate your organization</a>
+      </div>
+    </div>
+
+    <!-- FORGOT PASSWORD PANEL -->
+    <div id="forgot-panel">
+      <h1>Reset password</h1>
+      <p class="subtitle">Enter your email and we'll send a reset link.</p>
+      <div id="forgot-error" class="error" style="display:none;"></div>
+      <div id="forgot-success" class="success" style="display:none;"></div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="forgot-email" placeholder="you@gmail.com" />
+      </div>
+      <button class="btn-primary" id="reset-btn" onclick="sendReset()">Send reset link</button>
+      <div class="footer-links">
+        <a href="#" onclick="showLogin(); return false;">← Back to sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>

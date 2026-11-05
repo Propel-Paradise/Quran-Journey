@@ -1,0 +1,69 @@
+/* Phone layout for the school and parent dashboards.
+   Below 760px the sidebar becomes a slide-out menu (☰ button in the top bar)
+   and tables and grids stack into single columns. */
+.menu-btn, .nav-scrim { display: none; }
+
+@media (max-width: 760px) {
+  html, body { overflow: auto; height: auto; }
+  .page { display: block; height: auto; min-height: 100vh; }
+
+  /* Sidebar as a drawer */
+  .sidebar {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 90;
+    width: 82vw; max-width: 300px;
+    transform: translateX(-100%); transition: transform 0.2s ease;
+    overflow-y: auto;
+  }
+  body.nav-open .sidebar { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.4); }
+  .nav-scrim { position: fixed; inset: 0; z-index: 80; background: rgba(11,15,13,0.5); }
+  body.nav-open .nav-scrim { display: block; }
+  .nav-item { padding: 12px 12px; }
+
+  .menu-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; margin-left: -6px; flex-shrink: 0;
+    background: none; border: none; font-size: 22px; color: #0f1411; cursor: pointer;
+  }
+
+  .workspace { display: block; overflow: visible; min-height: 100vh; }
+  .topbar { position: sticky; top: 0; z-index: 50; padding: 8px 14px; gap: 8px; }
+  .breadcrumb { min-width: 0; overflow: hidden; white-space: nowrap; }
+  .breadcrumb span { overflow: hidden; text-overflow: ellipsis; }
+  .breadcrumb > span:not(.active), .breadcrumb > span:nth-child(2) { display: none; }
+  .topbar .icon-btn { display: none; }
+  .content { overflow: visible; padding: 14px; }
+  #student-content { overflow: visible !important; }
+
+  /* Stats: two per row */
+  .stats-row { grid-template-columns: 1fr 1fr !important; }
+  .stat-cell { border-bottom: 1px solid #eceae5; padding: 12px 14px; }
+  .stat-cell:nth-child(2n) { border-right: none; }
+  .stat-value { font-size: 20px; }
+
+  /* Tables become cards */
+  .table-head { display: none !important; }
+  .table-row { grid-template-columns: 1fr !important; gap: 6px; padding: 12px 14px; }
+  .action-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+  .row-btn { padding: 8px 12px; font-size: 12px; }
+  .section-header { flex-wrap: wrap; gap: 10px; }
+
+  /* School logs tab rows and student history */
+  #logs-list div[style*="grid-template-columns:1fr 1fr 1fr 1fr 1fr"] { grid-template-columns: 1fr 1fr !important; gap: 6px; }
+  #logs-list div[style*="gap:12px"] { flex-wrap: wrap; gap: 6px !important; }
+  #student-logs-content div[style*="grid-template-columns:1fr 1fr 1fr"] { grid-template-columns: 1fr !important; }
+
+  /* Parent page */
+  .hero { flex-wrap: wrap; padding: 14px; }
+  .week-strip { margin-left: 0; width: 100%; justify-content: space-between; }
+  .day-pill { width: auto; flex: 1; }
+  .log-grid { grid-template-columns: 1fr 1fr; }
+  #sessions-summary-cards { grid-template-columns: 1fr 1fr !important; }
+
+  /* Forms and modals: full width, 16px text so phones don't zoom in */
+  .modal-overlay { align-items: flex-end; padding: 0; }
+  .modal { max-width: none !important; border-radius: 14px 14px 0 0; padding: 20px 16px; max-height: 92vh; overflow-y: auto; }
+  .field-row { grid-template-columns: 1fr; }
+  input, select, textarea { font-size: 16px !important; }
+  .btn-primary, .btn-secondary, .btn-danger { padding: 10px 14px; }
+  .quality-btn { padding-top: 10px !important; padding-bottom: 10px !important; }
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — New Organization</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;color:#0f1411;background:#0b0f0d;}
+    body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;}
+    .header{display:flex;align-items:center;gap:10px;margin-bottom:32px;}
+    .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#10b981,#047857);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;}
+    .logo-name{font-size:15px;font-weight:600;color:#fff;}
+    .back-link{margin-left:auto;font-size:12px;color:#6b716d;text-decoration:none;}
+    .back-link:hover{color:#10b981;}
+    .steps{display:flex;align-items:center;margin-bottom:24px;gap:0;}
+    .step{display:flex;align-items:center;gap:8px;flex:1;}
+    .step-num{width:26px;height:26px;border-radius:50%;background:#141a17;color:#6b716d;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;border:1px solid #1c211e;transition:all 0.2s;font-family:'IBM Plex Mono',monospace;}
+    .step-num.active{background:#10b981;color:#062e22;border-color:#10b981;}
+    .step-num.done{background:#064e3b;color:#34d399;border-color:#14523f;}
+    .step-label{font-size:11.5px;color:#6b716d;font-weight:500;}
+    .step-label.active{color:#e7e5e0;font-weight:600;}
+    .step-div{flex:1;height:1px;background:#1c211e;margin:0 8px;max-width:40px;}
+    .card{width:100%;max-width:520px;background:#111814;border:1px solid #1c2e26;border-radius:12px;padding:32px;}
+    h2{font-size:20px;font-weight:600;color:#fff;letter-spacing:-0.4px;margin-bottom:4px;}
+    .sub{font-size:13px;color:#9aa19d;margin-bottom:24px;line-height:1.5;}
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-size:11px;color:#9aa19d;letter-spacing:0.4px;text-transform:uppercase;font-weight:500;margin-bottom:6px;}
+    .field input,.field select{width:100%;padding:10px 13px;border-radius:7px;border:1px solid #1c2e26;background:#0b0f0d;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s;color:#e7e5e0;}
+    .field input:focus,.field select:focus{border-color:#10b981;}
+    .field input::placeholder{color:#4a5050;}
+    .field select option{background:#0b0f0d;}
+    .field .hint{font-size:11px;color:#6b716d;margin-top:4px;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .btn-primary{width:100%;padding:11px;border-radius:7px;border:none;background:#10b981;color:#062e22;font-size:13px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.15s;margin-top:8px;}
+    .btn-primary:hover{opacity:0.9;}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .error-box{background:#1f1010;border:1px solid #3d1515;color:#f87171;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .trial-banner{background:#064e3b;border:1px solid #14523f;border-radius:8px;padding:12px 16px;margin-bottom:18px;font-size:12px;color:#d1fae5;display:flex;gap:10px;align-items:flex-start;line-height:1.5;}
+    .plan-card{border:1px solid #14523f;border-radius:10px;padding:18px;background:linear-gradient(135deg,#064e3b 0%,#111814 100%);margin-bottom:18px;}
+    .plan-name{font-size:17px;font-weight:600;color:#d1fae5;margin-bottom:4px;}
+    .plan-price{font-size:28px;font-weight:700;color:#34d399;letter-spacing:-0.5px;margin-bottom:10px;}
+    .plan-price span{font-size:13px;font-weight:400;color:#9aa19d;}
+    .plan-feat{font-size:12px;color:#9aa19d;line-height:2;}
+    .plan-feat .f{display:flex;align-items:center;gap:8px;}
+    .plan-feat .f::before{content:'✓';color:#10b981;font-weight:700;}
+    .security{font-size:11px;color:#6b716d;margin-bottom:14px;}
+    .success-screen{text-align:center;padding:20px 0;}
+    .success-screen .big{font-size:52px;margin-bottom:14px;}
+    .success-screen h2{font-size:22px;}
+    .success-screen p{font-size:13px;color:#9aa19d;margin-bottom:24px;margin-top:6px;}
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f0d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Quran Journey">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+  <div style="width:100%;max-width:520px">
+    <div class="header">
+      <div class="logo-mark">Q</div>
+      <div class="logo-name">Quran Journey</div>
+      <a href="index.html" class="back-link">← Sign in</a>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num active" id="sn1">1</div><div class="step-label active" id="sl1">Organization</div></div>
+      <div class="step-div"></div>
+      <div class="step"><div class="step-num" id="sn2">2</div><div class="step-label" id="sl2">Payment</div></div>
+      <div class="step-div"></div>
+      <div class="step"><div class="step-num" id="sn3">3</div><div class="step-label" id="sl3">Admin Account</div></div>
+      <div class="step-div"></div>
+      <div class="step"><div class="step-num" id="sn4">4</div><div class="step-label" id="sl4">Done</div></div>
+    </div>
+    <div class="card">
+      <div id="step1">
+        <h2>Tell us about your school</h2>
+        <p class="sub">This information will appear on your dashboard.</p>
+        <div id="s1err" class="error-box" style="display:none"></div>
+        <div class="field"><label>School / Organization Name</label><input type="text" id="org-name" placeholder="e.g. Al-Noor Islamic Academy" /></div>
+        <div class="field-row">
+          <div class="field"><label>City</label><input type="text" id="org-city" placeholder="e.g. Dallas" /></div>
+          <div class="field"><label>State</label><select id="org-state"><option value="">Select…</option><option>TX</option><option>CA</option><option>NY</option><option>FL</option><option>IL</option><option>NJ</option><option>VA</option><option>MD</option><option>MI</option><option>OH</option><option>GA</option><option>Other</option></select></div>
+        </div>
+        <div class="field"><label>School Email</label><input type="email" id="org-email" placeholder="admin@yourschool.org" /><div class="hint">This will be the main login email for your school account.</div></div>
+        <button class="btn-primary" onclick="goStep2()">Continue →</button>
+      </div>
+      <div id="step2" style="display:none">
+        <h2>Start your free trial</h2>
+        <p class="sub">30 days free, then $19.99/month. Cancel anytime.</p>
+        <div id="s2err" class="error-box" style="display:none"></div>
+        <div class="trial-banner">🎁 <div><strong>30-day free trial.</strong> Your card won't be charged until day 31.</div></div>
+        <div class="plan-card">
+          <div class="plan-name">Pro Plan</div>
+          <div class="plan-price">$19.99 <span>/ month</span></div>
+          <div class="plan-feat">
+            <div class="f">Unlimited students</div>
+            <div class="f">Parent portal with progress logs</div>
+            <div class="f">Sabaq, Sabqi & Manzil tracking</div>
+            <div class="f">Teacher portal</div>
+            <div class="f">30-day free trial</div>
+          </div>
+        </div>
+        <p class="security">🔒 You'll enter your card on Stripe's secure checkout page next. We never see or store your card details.</p>
+        <button class="btn-primary" id="s2btn" onclick="startCheckout()">Start Free Trial →</button>
+      </div>
+      <div id="step3" style="display:none">
+        <h2>Create your admin account</h2>
+        <p class="sub">This is the school login teachers will share to access the dashboard.</p>
+        <div id="s3err" class="error-box" style="display:none"></div>
+        <div class="field" id="s3-org-field" style="display:none"><label>School / Organization Name</label><input type="text" id="s3-org-name" placeholder="e.g. Al-Noor Islamic Academy" /></div>
+        <div class="field"><label>Full Name</label><input type="text" id="admin-name" placeholder="e.g. Sister Fatima" /></div>
+        <div class="hint" style="margin:-4px 0 14px">We'll email a link to your school email to set the password. You'll share it with your teachers.</div>
+        <button class="btn-primary" id="s3btn" onclick="createAccount()">Create Account →</button>
+      </div>
+      <div id="step4" style="display:none">
+        <div class="success-screen">
+          <div class="big">🎉</div>
+          <h2 style="color:#fff">You're all set!</h2>
+          <p>Your organization has been created. Check your school email for a link to set your password, then sign in.</p>
+          <button class="btn-primary" style="max-width:200px;margin:0 auto" onclick="window.location.href='index.html'">Go to Sign In →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script>
+    let orgData={};
+    const sessionId=new URLSearchParams(window.location.search).get('session_id')||'';
+    function showStep(n){[1,2,3,4].forEach(i=>{document.getElementById(`step${i}`).style.display=i===n?'block':'none';const sn=document.getElementById(`sn${i}`),sl=document.getElementById(`sl${i}`);sn.className='step-num'+(i<n?' done':i===n?' active':'');sn.textContent=i<n?'✓':String(i);sl.className='step-label'+(i===n?' active':'');});}
+    function err(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+    async function goStep2(){
+      const n=document.getElementById('org-name').value.trim(),em=document.getElementById('org-email').value.trim().toLowerCase();
+      document.getElementById('s1err').style.display='none';
+      if(!n)return err('s1err','Please enter your organization name.');
+      if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return err('s1err','Please enter a valid email.');
+      const{data}=await db.rpc('org_status_by_email',{p_email:em});
+      const existing=(data||[])[0];
+      if(existing){
+        if(!existing.is_active){window.location.href=BASE+'/reactivate.html?email='+encodeURIComponent(em);return;}
+        return err('s1err','An account with this email already exists. Please sign in instead.');
+      }
+      orgData={name:n,email:em,city:document.getElementById('org-city').value.trim(),state:document.getElementById('org-state').value};
+      sessionStorage.setItem('pendingOrg',JSON.stringify(orgData));showStep(2);
+    }
+    // Card details are entered once, on Stripe Checkout.
+    async function startCheckout(){
+      const btn=document.getElementById('s2btn');document.getElementById('s2err').style.display='none';
+      if(!orgData.email)return err('s2err','Session lost. Please go back.');
+      btn.disabled=true;btn.textContent='Opening secure checkout…';
+      try{
+        const resp=await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`},body:JSON.stringify({org_name:orgData.name||'',email:orgData.email,success_url:BASE+'/register.html?step=account&session_id={CHECKOUT_SESSION_ID}',cancel_url:BASE+'/register.html'})});
+        const result=await resp.json();
+        if(result.error||!result.url)throw new Error(result.error||'Could not start checkout.');
+        window.location.href=result.url;
+      }catch(e){err('s2err',e.message);btn.disabled=false;btn.textContent='Start Free Trial →';}
+    }
+    // The server checks with Stripe that checkout really finished before creating the school.
+    async function createAccount(){
+      const btn=document.getElementById('s3btn');document.getElementById('s3err').style.display='none';
+      const n=document.getElementById('admin-name').value.trim();
+      const orgName=(orgData.name||document.getElementById('s3-org-name').value||'').trim();
+      if(!orgName)return err('s3err','Please enter your organization name.');
+      if(!n)return err('s3err','Please enter your name.');
+      btn.disabled=true;btn.textContent='Creating account…';
+      const{error}=await callFunction('public-signup',{action:'complete_registration',session_id:sessionId,org_name:orgName,name:n});
+      if(error){err('s3err',error);btn.disabled=false;btn.textContent='Create Account →';return;}
+      sessionStorage.removeItem('pendingOrg');showStep(4);
+    }
+    window.addEventListener('DOMContentLoaded',()=>{
+      try{orgData=JSON.parse(sessionStorage.getItem('pendingOrg')||'{}');}catch(_){orgData={};}
+      if(new URLSearchParams(window.location.search).get('step')==='account'){
+        if(!sessionId){showStep(1);err('s1err','Please complete payment first.');return;}
+        showStep(3);
+        if(!orgData.name)document.getElementById('s3-org-field').style.display='block';
+        setTimeout(()=>{const el=document.getElementById(orgData.name?'admin-name':'s3-org-name');if(el)el.focus();},100);
+      }
+    });
+  </script>
+</body>
+</html>

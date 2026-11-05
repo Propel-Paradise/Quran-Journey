@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — Reactivate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:#0b0f0d;color:#e7e5e0;}
+    body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+    .card{width:100%;max-width:420px;background:#111814;border:1px solid #1c2e26;border-radius:12px;padding:32px;}
+    .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#10b981,#047857);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;}
+    .logo-name{font-size:16px;font-weight:600;color:#fff;}
+    h1{font-size:20px;font-weight:600;color:#fff;letter-spacing:-0.4px;margin-bottom:4px;}
+    .sub{font-size:13px;color:#9aa19d;margin-bottom:20px;line-height:1.5;}
+    .info-box{background:#064e3b;border:1px solid #14523f;border-radius:7px;padding:10px 13px;font-size:12px;color:#d1fae5;margin-bottom:16px;}
+    .plan-row{background:#141a17;border:1px solid #14523f;border-radius:8px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+    .plan-row .pname{font-size:14px;font-weight:600;color:#fff;}
+    .plan-row .pprice{font-size:20px;font-weight:700;color:#34d399;}
+    .plan-row .pprice span{font-size:12px;font-weight:400;color:#9aa19d;}
+    .field{margin-bottom:14px;}
+    .field label{display:block;font-size:11px;color:#9aa19d;letter-spacing:0.4px;text-transform:uppercase;font-weight:500;margin-bottom:6px;}
+    .field input{width:100%;padding:10px 13px;border-radius:7px;border:1px solid #1c2e26;background:#0b0f0d;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s;color:#e7e5e0;}
+    .field input:focus{border-color:#10b981;}
+    .security{font-size:11px;color:#6b716d;margin-bottom:14px;}
+    .btn-primary{width:100%;padding:11px;border-radius:7px;border:none;background:#10b981;color:#062e22;font-size:13px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.15s;}
+    .btn-primary:hover{opacity:0.9;}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .error{background:#1f1010;border:1px solid #3d1515;color:#f87171;border-radius:7px;padding:10px 13px;font-size:12px;margin-bottom:14px;}
+    .back-link{display:block;text-align:center;margin-top:16px;font-size:12px;color:#6b716d;text-decoration:none;}
+    .back-link:hover{color:#10b981;}
+    .success-screen{text-align:center;padding:10px 0;}
+    .success-screen .big{font-size:48px;margin-bottom:14px;}
+    .success-screen h2{font-size:20px;font-weight:600;color:#fff;margin-bottom:8px;}
+    .success-screen p{font-size:13px;color:#9aa19d;margin-bottom:20px;}
+    .not-found{text-align:center;padding:20px 0;color:#6b716d;font-size:13px;}
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f0d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Quran Journey">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row"><div class="logo-mark">Q</div><div class="logo-name">Quran Journey</div></div>
+    <div id="loading" style="text-align:center;color:#6b716d;font-size:13px;padding:20px 0">Verifying account…</div>
+    <div id="main" style="display:none">
+      <h1>Reactivate your account</h1>
+      <p class="sub">Welcome back. Your data has been kept. Restart your subscription to restore access.</p>
+      <div class="info-box" id="org-info"></div>
+      <div class="plan-row"><div class="pname">Pro Plan</div><div class="pprice">$19.99 <span>/ month</span></div></div>
+      <div id="error" class="error" style="display:none"></div>
+      <p class="security">🔒 You'll enter your card on Stripe's secure checkout page next.</p>
+      <button class="btn-primary" id="reactivate-btn" onclick="reactivate()">Reactivate · $19.99/month →</button>
+    </div>
+    <div id="not-found" style="display:none" class="not-found"><p>No cancelled account found.</p><a href="index.html" style="color:#10b981;font-size:12px">← Back to sign in</a></div>
+    <div id="success" style="display:none">
+      <div class="success-screen">
+        <div class="big">✅</div>
+        <h2>Account reactivated!</h2>
+        <p>Your subscription is active again. All your data is right where you left it.</p>
+        <button class="btn-primary" style="max-width:200px;margin:0 auto" onclick="window.location.href='index.html'">Sign In →</button>
+      </div>
+    </div>
+    <a href="index.html" class="back-link" id="back-link">← Back to sign in</a>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script>
+    let currentOrg=null;
+    function show(id){['loading','main','not-found','success'].forEach(x=>document.getElementById(x).style.display=x===id?'block':'none');}
+    async function init(){
+      const params=new URLSearchParams(window.location.search);
+      if(params.get('success')==='1'){show('success');document.getElementById('back-link').style.display='none';return;}
+      let orgEmail=(params.get('email')||'').trim().toLowerCase();
+      const{data:{session}}=await db.auth.getSession();
+      if(session&&!orgEmail)orgEmail=session.user.email.toLowerCase();
+      if(!orgEmail){show('not-found');return;}
+      // Returns only the school name, billing email and status. User and school tables stay private.
+      const{data}=await db.rpc('org_status_by_email',{p_email:orgEmail});
+      const org=(data||[])[0];
+      if(!org){show('not-found');return;}
+      if(org.is_active){window.location.href=BASE+'/index.html';return;}
+      currentOrg=org;
+      document.getElementById('org-info').textContent=`Reactivating: ${org.name} (${org.email})`;
+      show('main');
+    }
+    async function reactivate(){
+      const btn=document.getElementById('reactivate-btn'),errEl=document.getElementById('error');
+      btn.disabled=true;btn.textContent='Opening secure checkout…';errEl.style.display='none';
+      try{
+        const resp=await fetch(`${SUPABASE_URL}/functions/v1/create-checkout-session`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`},body:JSON.stringify({org_name:currentOrg.name,email:currentOrg.email,success_url:BASE+'/reactivate.html?success=1&email='+encodeURIComponent(currentOrg.email),cancel_url:BASE+'/reactivate.html?email='+encodeURIComponent(currentOrg.email)})});
+        const result=await resp.json();
+        if(result.error)throw new Error(result.error);
+        if(result.reactivated){window.location.href=BASE+'/index.html';return;}
+        if(!result.url)throw new Error('Could not start checkout.');
+        window.location.href=result.url;
+      }catch(e){errEl.textContent=e.message;errEl.style.display='block';btn.disabled=false;btn.textContent='Reactivate · $19.99/month →';}
+    }
+    init();
+  </script>
+</body>
+</html>

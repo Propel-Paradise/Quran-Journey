@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — School Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:#fafaf9;color:#0f1411;overflow:hidden;}
+    .page{display:flex;height:100vh;}
+
+    /* ── SIDEBAR ── */
+    .sidebar{width:248px;background:#0b0f0d;color:#e7e5e0;display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;}
+    .brand-row{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid #1c211e;flex-shrink:0;}
+    .logo-mark{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#10b981,#047857);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;flex-shrink:0;}
+    .brand-name{font-size:13px;font-weight:600;color:#fff;}
+    .brand-sub{font-size:11px;color:#9aa19d;}
+    .org-switch{margin:12px 12px 4px;padding:8px 10px;border-radius:7px;background:#141a17;border:1px solid #1f2622;display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0;}
+    .org-icon{width:22px;height:22px;border-radius:5px;background:#10b981;color:#062e22;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+    .section-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.6px;font-weight:600;padding:14px 20px 5px;flex-shrink:0;}
+    .nav-list{display:flex;flex-direction:column;padding:0 8px;gap:1px;}
+    .nav-item{display:flex;align-items:center;gap:11px;padding:8px 12px;border-radius:6px;font-size:13px;font-weight:500;color:#b0b6b1;border-left:2px solid transparent;cursor:pointer;transition:all 0.1s;user-select:none;}
+    .nav-item:hover{color:#fff;background:#141a17;}
+    .nav-item.active{color:#fff;background:#1c2421;border-left-color:#10b981;padding-left:10px;}
+    .nav-count{margin-left:auto;font-size:11px;color:#6b716d;font-variant-numeric:tabular-nums;}
+    .nav-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:4px;background:#10b98122;color:#34d399;font-weight:600;}
+    .sidebar-foot{margin-top:auto;padding:12px;border-top:1px solid #1c211e;flex-shrink:0;}
+    .trial-card{padding:12px;border-radius:8px;background:linear-gradient(135deg,#064e3b 0%,#0b0f0d 100%);border:1px solid #14523f;margin-bottom:12px;}
+    .trial-title{font-size:12px;font-weight:600;color:#d1fae5;}
+    .trial-sub{font-size:11px;color:#9aa19d;margin-top:3px;line-height:1.4;}
+    .trial-btn{margin-top:8px;padding:5px 10px;border-radius:5px;font-size:11px;font-weight:600;background:#10b981;color:#062e22;border:none;cursor:pointer;}
+    .profile-row{display:flex;align-items:center;gap:10px;}
+    .profile-avatar{width:30px;height:30px;border-radius:8px;background:#1f2622;color:#34d399;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:1px solid #2a322d;flex-shrink:0;}
+
+    /* ── WORKSPACE ── */
+    .workspace{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;}
+    .topbar{display:flex;align-items:center;gap:14px;padding:11px 24px;border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
+    .breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:#737773;}
+    .breadcrumb .active{font-size:13px;font-weight:600;color:#0f1411;}
+    .topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+    .icon-btn{width:30px;height:30px;border-radius:7px;background:transparent;border:1px solid #eceae5;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#3a3f3c;transition:background 0.1s;}
+    .icon-btn:hover{background:#f4f3ef;}
+    .btn-primary{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;background:#0b0f0d;color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity 0.15s;}
+    .btn-primary:hover{opacity:0.85;}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .btn-secondary{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;background:#fff;color:#3a3f3c;border:1px solid #e3e0da;cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+    .btn-secondary:hover{background:#f4f3ef;}
+    .btn-danger{padding:7px 14px;border-radius:7px;font-size:12px;font-weight:500;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;cursor:pointer;}
+    .btn-danger:hover{background:#fee2e2;}
+
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid #eceae5;background:#fff;flex-shrink:0;}
+    .stat-cell{padding:16px 20px;border-right:1px solid #eceae5;}
+    .stat-cell:last-child{border-right:none;}
+    .stat-label{font-size:11px;color:#737773;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
+    .stat-value{font-size:26px;font-weight:600;letter-spacing:-0.5px;margin-top:6px;font-variant-numeric:tabular-nums;}
+    .stat-sub{font-size:11px;margin-top:4px;}
+
+    .content{flex:1;overflow:auto;padding:20px 24px;}
+
+    /* Table */
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+    .section-title{font-size:15px;font-weight:600;}
+    .table-wrap{background:#fff;border:1px solid #eceae5;border-radius:10px;overflow:hidden;margin-bottom:24px;}
+    .table-head{display:grid;padding:10px 18px;background:#fafaf7;border-bottom:1px solid #eceae5;font-size:10.5px;color:#737773;letter-spacing:0.3px;text-transform:uppercase;font-weight:500;}
+    .table-row{display:grid;padding:12px 18px;align-items:center;border-bottom:1px solid #eceae5;font-size:13px;transition:background 0.1s;}
+    .table-row:last-child{border-bottom:none;}
+    .table-row:hover{background:#fafaf9;}
+    .student-name{font-weight:500;}
+    .student-sub{font-size:11px;color:#737773;margin-top:1px;}
+
+    .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:500;}
+    .pill-success{background:#ecfdf5;color:#047857;}
+    .pill-warn{background:#fffbeb;color:#b45309;}
+    .pill-default{background:#f4f3ef;color:#3a3f3c;}
+
+    .action-btns{display:flex;gap:5px;justify-content:flex-end;}
+    .row-btn{padding:4px 9px;border-radius:6px;font-size:11px;font-weight:500;border:1px solid #e3e0da;background:#fff;cursor:pointer;color:#3a3f3c;transition:all 0.1s;}
+    .row-btn:hover{background:#f4f3ef;}
+    .row-btn-danger{border-color:#fecaca!important;color:#b91c1c!important;background:#fef2f2!important;}
+    .row-btn-danger:hover{background:#fee2e2!important;}
+
+    .empty-state{padding:48px;text-align:center;color:#737773;font-size:13px;}
+    .empty-state .big{font-size:36px;margin-bottom:10px;}
+
+    /* Invite banner */
+    .invite-banner{background:#0b0f0d;border:1px solid #1c2e26;border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+    .invite-code-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;}
+    .invite-label{font-size:10px;color:#6b716d;text-transform:uppercase;letter-spacing:0.5px;font-weight:500;margin-bottom:4px;}
+    .invite-sub{font-size:11px;color:#9aa19d;margin-top:3px;}
+
+    /* Settings */
+    .settings-card{background:#fff;border:1px solid #eceae5;border-radius:10px;padding:20px;margin-bottom:16px;}
+    .settings-card h3{font-size:14px;font-weight:600;margin-bottom:4px;}
+    .settings-card .desc{font-size:12px;color:#737773;margin-bottom:14px;line-height:1.5;}
+    .settings-card.danger{border-color:#fecaca;}
+    .settings-card.danger h3{color:#b91c1c;}
+
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(11,15,13,0.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(2px);}
+    .modal{background:#fff;border-radius:10px;padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto;}
+    .modal h2{font-size:17px;font-weight:600;margin-bottom:4px;}
+    .modal .sub{font-size:12px;color:#737773;margin-bottom:20px;line-height:1.5;}
+    .field{margin-bottom:14px;}
+    .field label{display:block;font-size:10.5px;color:#737773;letter-spacing:0.4px;text-transform:uppercase;font-weight:500;margin-bottom:6px;}
+    .field input,.field select,.field textarea{width:100%;padding:9px 12px;border-radius:7px;border:1px solid #e3e0da;background:#fff;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s;color:#0f1411;}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:#10b981;}
+    .field textarea{resize:vertical;min-height:70px;}
+    .field .hint{font-size:11px;color:#737773;margin-top:4px;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .section-divider{font-size:10.5px;color:#047857;text-transform:uppercase;letter-spacing:0.4px;font-weight:600;margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid #ecfdf5;}
+    .quality-row{display:flex;gap:7px;margin-top:6px;}
+    .quality-btn{flex:1;padding:7px 0;border-radius:6px;font-size:11.5px;font-family:'IBM Plex Sans',sans-serif;font-weight:500;cursor:pointer;border:1px solid #e3e0da;background:#fff;color:#737773;transition:all 0.15s;text-align:center;}
+    .quality-btn.sel-excellent{background:#ecfdf5;color:#047857;border-color:#6ee7b7;}
+    .quality-btn.sel-good{background:#fffbeb;color:#b45309;border-color:#fcd34d;}
+    .quality-btn.sel-needs{background:#fef2f2;color:#b91c1c;border-color:#fecaca;}
+    .quality-btn.sel-failed{background:#b91c1c;color:#fff;border-color:#b91c1c;}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+    .error-box{background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .success-box{background:#ecfdf5;border:1px solid #6ee7b7;color:#047857;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .info-box{background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .warn-box{background:#fffbeb;border:1px solid #fcd34d;color:#92400e;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:14px;}
+    .pw-reveal{background:#f4f3ef;border:1px solid #e3e0da;border-radius:7px;padding:14px 16px;margin-bottom:14px;}
+    .pw-reveal .pw-label{font-size:10.5px;color:#737773;text-transform:uppercase;letter-spacing:0.4px;font-weight:500;margin-bottom:6px;}
+    .pw-reveal .pw{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:#0f1411;letter-spacing:2px;word-break:break-all;}
+    .copy-btn{margin-top:8px;font-size:11px;color:#047857;background:none;border:none;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;padding:0;font-weight:500;}
+    .loading{padding:60px;text-align:center;color:#737773;font-size:13px;}
+  </style>
+  <link rel="stylesheet" href="mobile.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f0d">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Quran Journey">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+<div class="page">
+  <div class="nav-scrim" onclick="toggleNav(false)"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand-row">
+      <div class="logo-mark">Q</div>
+      <div style="line-height:1.2">
+        <div class="brand-name">Quran Journey</div>
+        <div class="brand-sub">Teacher portal</div>
+      </div>
+    </div>
+
+    <div class="org-switch" id="org-switch-btn">
+      <div class="org-icon" id="org-icon-text">S</div>
+      <div style="line-height:1.2;flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="org-name-sidebar">School</div>
+        <div style="font-size:10.5px;color:#9aa19d" id="org-plan-sidebar">Loading…</div>
+      </div>
+    </div>
+
+    <div class="section-label">Workspace</div>
+    <nav class="nav-list">
+      <div class="nav-item active" id="nav-students" onclick="switchTab('students',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 14a4 4 0 1 0-8 0"/><circle cx="12" cy="7" r="3"/><path d="M22 18a4 4 0 0 0-3-3.87"/><path d="M2 18a4 4 0 0 1 3-3.87"/></svg>
+        <span>Students</span>
+        <span class="nav-count" id="nav-count-students">—</span>
+      </div>
+      <div class="nav-item" id="nav-parents" onclick="switchTab('parents',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 19a6 6 0 0 1 12 0"/><circle cx="17" cy="6" r="2"/><path d="M21 14a4 4 0 0 0-7-2.5"/></svg>
+        <span>Parents</span>
+        <span class="nav-count" id="nav-count-parents">—</span>
+      </div>
+      <div class="nav-item" id="nav-logs" onclick="switchTab('logs',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11l3 3v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>
+        <span>Progress logs</span>
+        <span class="nav-badge" id="nav-badge-logs" style="display:none">0 today</span>
+      </div>
+      <div class="nav-item" id="nav-settings" onclick="switchTab('settings',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="trial-card" id="trial-card" style="display:none">
+        <div class="trial-title">Free trial active</div>
+        <div class="trial-sub" id="trial-sub">Upgrade to keep full access.</div>
+        
+      </div>
+      <div class="profile-row">
+        <div class="profile-avatar" id="sidebar-avatar">S</div>
+        <div style="flex:1;min-width:0;line-height:1.2">
+          <div style="font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebar-name">School</div>
+          <div style="font-size:11px;color:#9aa19d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="sidebar-email">—</div>
+        </div>
+        <button onclick="signOut()" style="background:none;border:none;cursor:pointer;padding:4px;color:#9aa19d;display:flex;align-items:center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- WORKSPACE -->
+  <div class="workspace">
+    <div class="topbar">
+      <button class="menu-btn" aria-label="Menu" onclick="toggleNav()">☰</button>
+      <div class="breadcrumb">
+        <span id="topbar-org">School</span>
+        <span style="color:#d4d0ca">/</span>
+        <span class="active" id="topbar-page">Students</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" title="Search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="btn-primary" onclick="openLogModal()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+          Log session
+        </button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-label">Students</div>
+        <div class="stat-value" id="stat-students">—</div>
+        <div class="stat-sub" style="color:#047857" id="stat-students-sub">in your class</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Logs today</div>
+        <div class="stat-value" id="stat-logs">—</div>
+        <div class="stat-sub" style="color:#737773" id="stat-date">—</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Avg sabaq lines</div>
+        <div class="stat-value" id="stat-avg">—</div>
+        <div class="stat-sub" style="color:#737773">this week</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Sessions / week</div>
+        <div class="stat-value" id="stat-week">—</div>
+        <div class="stat-sub" style="color:#737773">logged sessions</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- STUDENTS TAB -->
+      <div id="tab-students">
+        <div class="section-header">
+          <div class="section-title">Students</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="search" id="student-search" placeholder="Search students…" oninput="renderStudents()" autocomplete="off" name="student-search-field"
+              style="padding:7px 12px;border-radius:7px;border:1px solid #e3e0da;font-size:12px;outline:none;width:180px" />
+            <button class="btn-primary" onclick="openAddStudentModal()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              Add Student
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head" style="grid-template-columns:2fr 1.2fr 1fr 140px">
+            <div>Student</div><div>Linked Parent</div><div>Last Log</div><div style="text-align:right">Actions</div>
+          </div>
+          <div id="students-list"><div class="loading">Loading students…</div></div>
+        </div>
+      </div>
+
+      <!-- PARENTS TAB -->
+      <div id="tab-parents" style="display:none">
+        <div class="invite-banner" id="invite-banner">
+          <div>
+            <div class="invite-label">School invite code</div>
+            <div class="invite-code-val" id="invite-code-display">—</div>
+            <div class="invite-sub">Share with parents · they register at <strong>join.html</strong></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn-secondary" onclick="copyInviteCode(event)" style="background:#141a17;border-color:#1f2622;color:#e7e5e0">Copy Code</button>
+            <button class="btn-secondary" onclick="copyJoinLink(event)" style="background:#141a17;border-color:#1f2622;color:#e7e5e0">Copy Join Link</button>
+            <button class="btn-secondary" onclick="regenerateInviteCode()" style="background:#141a17;border-color:#1f2622;color:#9aa19d">New Code</button>
+          </div>
+        </div>
+        <div class="section-header">
+          <div class="section-title">Parents</div>
+          <button class="btn-primary" onclick="document.getElementById('add-parent-modal').style.display='flex'">+ Add Parent</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-head" style="grid-template-columns:1.5fr 1.5fr 1.5fr 80px">
+            <div>Name</div><div>Email</div><div>Linked Students</div><div style="text-align:right">Actions</div>
+          </div>
+          <div id="parents-list"><div class="loading">Loading parents…</div></div>
+        </div>
+      </div>
+
+      <!-- LOGS TAB -->
+      <div id="tab-logs" style="display:none">
+        <div class="section-header">
+          <div class="section-title">Progress Logs</div>
+          <button class="btn-primary" onclick="openLogModal()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Log Progress
+          </button>
+        </div>
+        <div class="table-wrap">
+          <div id="logs-list"><div class="loading">Loading logs…</div></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" style="display:none">
+        <div class="settings-card">
+          <h3>Account</h3>
+          <p class="desc">Signed in as <span id="settings-email" style="font-weight:500;color:#0f1411"></span></p>
+          <div id="settings-org-name" style="font-size:13px;color:#737773;margin-bottom:14px"></div>
+          <button class="btn-secondary" onclick="openChangePasswordModal()">Change Password</button>
+        </div>
+        <div class="settings-card">
+          <h3>Subscription</h3>
+          <p class="desc">Manage your Quran Journey plan.</p>
+          <div id="subscription-status" style="margin-bottom:14px;font-size:13px;color:#3a3f3c"></div>
+          <button class="btn-danger" onclick="openCancelModal()">Cancel Subscription</button>
+        </div>
+        <div class="settings-card danger">
+          <h3>Data & Privacy</h3>
+          <p class="desc">If you cancel, your account is deactivated — not deleted. All student and progress data is preserved. Contact support to reactivate.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── MODALS ── -->
+
+<!-- ADD STUDENT -->
+<div class="modal-overlay" id="add-student-modal" style="display:none">
+  <div class="modal">
+    <h2>Add Student</h2><p class="sub">Add a new student to your class.</p>
+    <div id="add-student-error" class="error-box" style="display:none"></div>
+    <div class="field"><label>Student Name</label><input type="text" id="new-student-name" placeholder="e.g. Yusuf Ahmed" /></div>
+    <div class="field">
+      <label>Linked Parents</label>
+      <div id="new-student-parents-list" style="display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto;border:1px solid #e3e0da;border-radius:7px;padding:8px 10px;background:#fff">
+        <span style="font-size:12px;color:#737773">Loading parents…</span>
+      </div>
+      <div class="hint">Select one or more parents.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" onclick="addStudent()">Add Student</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT STUDENT -->
+<div class="modal-overlay" id="edit-student-modal" style="display:none">
+  <div class="modal">
+    <h2>Edit Student</h2><p class="sub">Update this student's profile.</p>
+    <div id="edit-student-error" class="error-box" style="display:none"></div>
+    <input type="hidden" id="edit-student-id" />
+    <div class="field"><label>Student Name</label><input type="text" id="edit-student-name" placeholder="e.g. Yusuf Ahmed" /></div>
+    <div class="field">
+      <label>Linked Parents</label>
+      <div id="edit-student-parents-list" style="display:flex;flex-direction:column;gap:6px;max-height:160px;overflow-y:auto;border:1px solid #e3e0da;border-radius:7px;padding:8px 10px;background:#fff">
+        <span style="font-size:12px;color:#737773">Loading parents…</span>
+      </div>
+      <div class="hint">Select one or more parents.</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" onclick="saveEditStudent()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- STUDENT LOGS MODAL -->
+<div class="modal-overlay" id="student-logs-modal" style="display:none">
+  <div class="modal" style="max-width:680px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <h2 id="student-logs-title">Student Logs</h2>
+      <button onclick="closeModals()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#737773">✕</button>
+    </div>
+    <p class="sub" id="student-logs-sub"></p>
+    <div id="student-logs-content" style="max-height:60vh;overflow-y:auto"><div class="loading">Loading…</div></div>
+  </div>
+</div>
+
+<!-- LOG PROGRESS -->
+<div class="modal-overlay" id="log-modal" style="display:none">
+  <div class="modal">
+    <h2>Log Progress</h2><p class="sub">Record today's session for a student.</p>
+    <div id="log-error" class="error-box" style="display:none"></div>
+    <div class="field"><label>Student</label><select id="log-student-select"><option value="">Select student…</option></select></div>
+    <div class="field"><label>Date</label><input type="date" id="log-date" /></div>
+    <div class="section-divider">Sabaq (New Lesson)</div>
+    <div class="field"><label>New Lines</label><input type="number" id="log-sabaq-lines" min="0" placeholder="e.g. 10" /></div>
+    <div class="field"><label>Result</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('sabaq','Excellent')" id="sq-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('sabaq','Good')" id="sq-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('sabaq','Needs Work')" id="sq-needs">Needs Work</div>
+        <div class="quality-btn" onclick="setQuality('sabaq','Failed')" id="sq-failed">Failed</div>
+      </div>
+    </div>
+    <div class="section-divider">Sabqi (Recent Revision)</div>
+    <div class="field-row">
+      <div class="field"><label>Juz #</label><input type="text" id="log-sabqi-juz" placeholder="e.g. Juz 3" /></div>
+      <div class="field"><label>Pages</label><input type="number" id="log-sabqi-pages" min="0" placeholder="e.g. 4" /></div>
+    </div>
+    <div class="field"><label>Result</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('sabqi','Excellent')" id="sqi-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('sabqi','Good')" id="sqi-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('sabqi','Needs Work')" id="sqi-needs">Needs Work</div>
+        <div class="quality-btn" onclick="setQuality('sabqi','Failed')" id="sqi-failed">Failed</div>
+      </div>
+    </div>
+    <div class="section-divider">Manzil (Old Revision)</div>
+    <div class="field-row">
+      <div class="field"><label>Number of Juz</label><input type="number" id="log-manzil-count" min="0" max="30" placeholder="e.g. 2" /></div>
+      <div class="field"><label>Partial Juz</label>
+        <div class="quality-row" style="margin-top:6px">
+          <div class="quality-btn" onclick="setManzilFraction('¼')" id="mz-frac-quarter">¼</div>
+          <div class="quality-btn" onclick="setManzilFraction('½')" id="mz-frac-half">½</div>
+          <div class="quality-btn" onclick="setManzilFraction('¾')" id="mz-frac-three">¾</div>
+        </div>
+      </div>
+    </div>
+    <div class="field"><label>Which Juz (optional)</label><input type="text" id="log-manzil-juz" placeholder="e.g. Juz 1–3" /></div>
+    <div class="field"><label>Result</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('manzil','Excellent')" id="mz-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('manzil','Good')" id="mz-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('manzil','Needs Work')" id="mz-needs">Needs Work</div>
+        <div class="quality-btn" onclick="setQuality('manzil','Failed')" id="mz-failed">Failed</div>
+      </div>
+    </div>
+    <div class="section-divider">Behavior & Notes</div>
+    <div class="field"><label>Behavior</label>
+      <div class="quality-row">
+        <div class="quality-btn" onclick="setQuality('behavior','Excellent')" id="bh-excellent">Excellent</div>
+        <div class="quality-btn" onclick="setQuality('behavior','Good')" id="bh-good">Good</div>
+        <div class="quality-btn" onclick="setQuality('behavior','Needs Work')" id="bh-needs">Needs Work</div>
+      </div>
+    </div>
+    <div class="field"><label>Teacher's Notes (optional)</label><textarea id="log-notes" placeholder="Any observations or comments for the parent…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" id="log-submit-btn" onclick="submitLog()">Save Log</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD -->
+<div class="modal-overlay" id="change-password-modal" style="display:none">
+  <div class="modal">
+    <h2>Change Password</h2><p class="sub">Set a new password for your account.</p>
+    <div id="cp-error" class="error-box" style="display:none"></div>
+    <div id="cp-success" class="success-box" style="display:none"></div>
+    <div class="field"><label>New Password</label><input type="password" id="cp-new-password" placeholder="Minimum 8 characters" /></div>
+    <div class="field"><label>Confirm Password</label><input type="password" id="cp-new-password2" placeholder="Re-enter password" /></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" id="cp-btn" onclick="changePassword()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL SUBSCRIPTION -->
+<div class="modal-overlay" id="cancel-modal" style="display:none">
+  <div class="modal">
+    <h2>Cancel Subscription</h2><p class="sub">Billing stops right away and your account is deactivated, not deleted. All data is kept if you return.</p>
+    <div class="warn-box">⚠️ Students, parents, and progress logs are saved. To come back, sign in and you will be taken to the reactivation page.</div>
+    <div id="cancel-error" class="error-box" style="display:none"></div>
+    <div id="cancel-success" class="success-box" style="display:none"></div>
+    <div class="field"><label>Type CANCEL to confirm</label><input type="text" id="cancel-confirm" placeholder="CANCEL" /></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Go Back</button>
+      <button class="btn-danger" id="cancel-btn" onclick="cancelSubscription()">Deactivate Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="add-parent-modal" style="display:none">
+  <div class="modal">
+    <h2>Add Parent</h2>
+    <p class="sub">Add a parent by email. They'll get an email with a link to set their own password.</p>
+    <div id="add-parent-error" class="error-box" style="display:none"></div>
+    <div class="field"><label>Full Name</label><input type="text" id="new-parent-name" placeholder="e.g. Sara Ahmed" /></div>
+    <div class="field"><label>Email</label><input type="email" id="new-parent-email" placeholder="e.g. sara@gmail.com" /></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModals()">Cancel</button>
+      <button class="btn-primary" id="add-parent-btn" onclick="addParentManually()">Add Parent</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="school.js"></script>
+</body>
+</html>

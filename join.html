@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quran Journey — Join as Parent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:#0b0f0d;color:#e7e5e0;}
+    body{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+    .card{width:100%;max-width:400px;background:#111814;border:1px solid #1c2e26;border-radius:12px;padding:32px;}
+    .logo-row{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
+    .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#f59e0b,#b45309);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;}
+    .logo-name{font-size:16px;font-weight:600;color:#fff;}
+    h1{font-size:20px;font-weight:600;color:#fff;letter-spacing:-0.4px;margin-bottom:4px;}
+    .sub{font-size:13px;color:#9aa19d;margin-bottom:24px;line-height:1.5;}
+    .school-banner{background:#064e3b;border:1px solid #14523f;border-radius:8px;padding:10px 14px;margin-bottom:16px;display:none;}
+    .school-banner .slabel{font-size:10px;color:#34d399;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:3px;}
+    .school-banner .sname{font-size:14px;font-weight:600;color:#d1fae5;}
+    .field{margin-bottom:14px;}
+    .field label{display:block;font-size:11px;color:#9aa19d;letter-spacing:0.4px;text-transform:uppercase;font-weight:500;margin-bottom:6px;}
+    .field input{width:100%;padding:10px 13px;border-radius:7px;border:1px solid #1c2e26;background:#0b0f0d;font-size:13px;font-family:'IBM Plex Sans',sans-serif;outline:none;transition:border-color 0.15s;color:#e7e5e0;}
+    .field input:focus{border-color:#f59e0b;}
+    .field input::placeholder{color:#4a5050;}
+    .field input.valid{border-color:#10b981;background:#040d09;}
+    .field input.invalid{border-color:#ef4444;}
+    .field .hint{font-size:11px;color:#6b716d;margin-top:4px;}
+    .code-input{font-family:'IBM Plex Mono',monospace!important;font-size:20px!important;letter-spacing:4px;text-transform:uppercase;text-align:center;font-weight:700;}
+    .btn-primary{width:100%;padding:11px;border-radius:7px;border:none;background:#f59e0b;color:#451a03;font-size:13px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;cursor:pointer;transition:opacity 0.15s;margin-top:4px;}
+    .btn-primary:hover{opacity:0.9;}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+    .error{background:#1f1010;border:1px solid #3d1515;color:#f87171;border-radius:7px;padding:10px 13px;font-size:12px;margin-bottom:14px;}
+    .back-link{display:block;text-align:center;margin-top:16px;font-size:12px;color:#6b716d;text-decoration:none;}
+    .back-link:hover{color:#f59e0b;}
+    .success-screen{text-align:center;padding:10px 0;}
+    .success-screen .big{font-size:48px;margin-bottom:14px;}
+    .success-screen h2{font-size:20px;font-weight:600;color:#fff;margin-bottom:8px;}
+    .success-screen p{font-size:13px;color:#9aa19d;margin-bottom:20px;}
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f0d">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+</head>
+<body>
+  <div class="card">
+    <div class="logo-row"><div class="logo-mark">Q</div><div class="logo-name">Quran Journey</div></div>
+    <div id="register-form">
+      <h1>Join as a parent</h1>
+      <p class="sub">Enter your school's invite code to create your parent account.</p>
+      <div id="error" class="error" style="display:none"></div>
+      <div class="school-banner" id="school-banner"><div class="slabel">Joining</div><div class="sname" id="school-name-display"></div></div>
+      <div class="field"><label>School Invite Code</label><input type="text" id="invite-code" class="code-input" placeholder="XXXX-XXXX" maxlength="9" autocomplete="off" oninput="validateCode()" /><div class="hint" id="code-hint">Enter the code your school gave you.</div></div>
+      <div class="field"><label>Your Name</label><input type="text" id="parent-name" placeholder="e.g. Ahmed Al-Rashid" autocomplete="name" /></div>
+      <div class="field"><label>Email</label><input type="email" id="parent-email" placeholder="you@gmail.com" autocomplete="email" /></div>
+      <div class="hint" style="margin:-4px 0 14px">We'll email you a link to set your password.</div>
+      <button class="btn-primary" id="register-btn" onclick="register()">Create Account →</button>
+      <a href="index.html" class="back-link">Already have an account? Sign in</a>
+    </div>
+    <div id="success-screen" style="display:none">
+      <div class="success-screen">
+        <div class="big">🎉</div>
+        <h2>You're all set!</h2>
+        <p>Your account has been created. Check your email for a link to set your password, then you'll see your child's progress.</p>
+        <button class="btn-primary" style="max-width:200px;margin:0 auto" onclick="window.location.href='index.html'">Sign In →</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script>
+    let codeOk=false,codeTimer=null;
+    document.getElementById('invite-code').addEventListener('input',function(){let v=this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase().slice(0,8);if(v.length>4)v=v.slice(0,4)+'-'+v.slice(4);this.value=v;});
+    function validateCode(){
+      const code=document.getElementById('invite-code').value.trim().toUpperCase();
+      const input=document.getElementById('invite-code'),hint=document.getElementById('code-hint'),banner=document.getElementById('school-banner');
+      clearTimeout(codeTimer);
+      if(code.length<9){input.className='code-input';banner.style.display='none';codeOk=false;hint.textContent='Enter the code your school gave you.';hint.style.color='';return;}
+      codeTimer=setTimeout(async()=>{
+        // Only the school name and status come back; the school list itself is not readable.
+        const{data}=await db.rpc('lookup_invite_code',{p_code:code});
+        const org=(data||[])[0];
+        if(!org){input.className='code-input invalid';hint.textContent='Code not found. Check with your school.';hint.style.color='#f87171';banner.style.display='none';codeOk=false;}
+        else if(!org.is_active){input.className='code-input invalid';hint.textContent="This school's account is currently inactive.";hint.style.color='#f87171';banner.style.display='none';codeOk=false;}
+        else{input.className='code-input valid';hint.textContent='✓ Code verified!';hint.style.color='#34d399';document.getElementById('school-name-display').textContent=org.name;banner.style.display='block';codeOk=true;}
+      },500);
+    }
+    function fail(msg){const errEl=document.getElementById('error'),btn=document.getElementById('register-btn');errEl.textContent=msg;errEl.style.display='block';btn.disabled=false;btn.textContent='Create Account →';}
+    async function register(){
+      const code=document.getElementById('invite-code').value.trim().toUpperCase(),name=document.getElementById('parent-name').value.trim(),email=document.getElementById('parent-email').value.trim().toLowerCase();
+      const btn=document.getElementById('register-btn');document.getElementById('error').style.display='none';
+      if(!code||code.length<9)return fail("Please enter your school's invite code.");
+      if(!name)return fail('Please enter your name.');
+      if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return fail('Please enter a valid email.');
+      btn.disabled=true;btn.textContent='Creating account…';
+      // The server checks the code, creates the account as a parent, and emails a link to set a password.
+      const{error}=await callFunction('public-signup',{action:'join_school',code,name,email});
+      if(error)return fail(error);
+      document.getElementById('register-form').style.display='none';document.getElementById('success-screen').style.display='block';
+    }
+    window.addEventListener('DOMContentLoaded',()=>{const p=new URLSearchParams(window.location.search);const code=p.get('code');if(code){const input=document.getElementById('invite-code');let f=code.replace(/[^A-Za-z0-9]/g,'').toUpperCase().slice(0,8);if(f.length>4)f=f.slice(0,4)+'-'+f.slice(4);input.value=f;validateCode();}});
+  </script>
+</body>
+</html>
