@@ -1,5 +1,5 @@
 // Shared settings and helpers. Loaded by every page right after the Supabase library.
-const APP_VERSION = 'v1.8';
+const APP_VERSION = 'v1.9';
 const SUPABASE_URL = 'https://fdibhjmbabdcphldnvmq.supabase.co';
 // Publishable key: safe to be public. Data is protected by the database rules in supabase/migrations.
 const SUPABASE_KEY = 'sb_publishable_DErpFcOi5m4LMgkVYFP5Kg_6fhVxHqG';

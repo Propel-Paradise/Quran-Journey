@@ -1,7 +1,7 @@
 // Service worker: makes the app installable and lets pages open on a weak connection.
 // Always tries the network first so updates show up right away; falls back to the cache.
 // Only this site's own files are cached. Supabase, Stripe and CDN requests are never touched.
-const CACHE = 'quran-journey-v1.8';
+const CACHE = 'quran-journey-v1.9';
 const SHELL = [
   './', 'index.html', 'school.html', 'parent.html', 'join.html', 'register.html',
   'reactivate.html', 'reset-password.html', 'change-password.html', '404.html',
